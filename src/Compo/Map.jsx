@@ -1,8 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
-import * as turf from '@turf/turf';
+// import * as turf from '@turf/turf';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '../App.css';
+import indiaGeoJSON from './Indian_States.json';
+import indiaGeoJSON1 from './india.geojson';
+import indiaGeoJSON3 from './india-states.geojson';
+
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoic2hpdmtpcmFuIiwiYSI6ImNtMjh6eHNsNjAwOWUyanF4Z3BoN21oMXQifQ.TDGNdQYvaYAS2bKyGplIuQ';
 
@@ -60,6 +64,37 @@ export default function Map({ coordinates, moder }) {
         ]
       };
       map.on('load', () => {
+        map.addSource('india', {
+          type: 'geojson',
+          data: indiaGeoJSON1,
+        });
+
+        // Add fill layer for states
+        map.addLayer({
+          id: 'state-fill',
+          source: 'india',
+          type: 'fill',
+          paint: {
+            'fill-color': '#000000', // Light black for state fill
+            'fill-opacity': 0.7,
+          },
+        });
+
+        //states and districts
+        map.addLayer({
+          id: 'borders',
+          source: 'india',
+          type: 'line',
+          paint: {
+            'line-color': '#A9A9A9', // Dark white for borders
+            'line-width': [
+              'case',
+              ['==', ['get', 'boundary'], 'state'], 3, // Thicker lines for state borders
+              1, // Thinner lines for district borders
+            ],
+          },
+        });
+
         map.addSource('route', {
           'type': 'geojson',
           'data': route
@@ -199,6 +234,37 @@ export default function Map({ coordinates, moder }) {
         ]
       };
       map.on('load', () => {
+        map.addSource('india', {
+          type: 'geojson',
+          data: indiaGeoJSON1,
+        });
+
+        // Add fill layer for states
+        map.addLayer({
+          id: 'state-fill',
+          source: 'india',
+          type: 'fill',
+          paint: {
+            'fill-color': '#000000', // Light black for state fill
+            'fill-opacity': 0.7,
+          },
+        });
+
+        //states and districts
+        map.addLayer({
+          id: 'borders',
+          source: 'india',
+          type: 'line',
+          paint: {
+            'line-color': '#A9A9A9', // Dark white for borders
+            'line-width': [
+              'case',
+              ['==', ['get', 'boundary'], 'state'], 3, // Thicker lines for state borders
+              1, // Thinner lines for district borders
+            ],
+          },
+        });
+
         map.addSource('route', {
           'type': 'geojson',
           'data': route
@@ -378,6 +444,37 @@ export default function Map({ coordinates, moder }) {
       };
 
       map.on('load', () => {
+        map.addSource('india', {
+          type: 'geojson',
+          data: indiaGeoJSON1,
+        });
+
+        // Add fill layer for states
+        map.addLayer({
+          id: 'state-fill',
+          source: 'india',
+          type: 'fill',
+          paint: {
+            'fill-color': '#000000', // Light black for state fill
+            'fill-opacity': 0.7,
+          },
+        });
+
+        //states and districts
+        map.addLayer({
+          id: 'borders',
+          source: 'india',
+          type: 'line',
+          paint: {
+            'line-color': '#A9A9A9', // Dark white for borders
+            'line-width': [
+              'case',
+              ['==', ['get', 'boundary'], 'state'], 3, // Thicker lines for state borders
+              1, // Thinner lines for district borders
+            ],
+          },
+        });
+
         map.addSource('route1', {
           'type': 'geojson',
           'data': route1
@@ -698,6 +795,37 @@ export default function Map({ coordinates, moder }) {
       };
 
       map.on('load', () => {
+        map.addSource('india', {
+          type: 'geojson',
+          data: indiaGeoJSON1,
+        });
+
+        // Add fill layer for states
+        map.addLayer({
+          id: 'state-fill',
+          source: 'india',
+          type: 'fill',
+          paint: {
+            'fill-color': '#000000', // Light black for state fill
+            'fill-opacity': 0.7,
+          },
+        });
+
+        //states and districts
+        map.addLayer({
+          id: 'borders',
+          source: 'india',
+          type: 'line',
+          paint: {
+            'line-color': '#A9A9A9', // Dark white for borders
+            'line-width': [
+              'case',
+              ['==', ['get', 'boundary'], 'state'], 3, // Thicker lines for state borders
+              1, // Thinner lines for district borders
+            ],
+          },
+        });
+
         map.addSource('route1', {
           'type': 'geojson',
           'data': route1
@@ -1043,6 +1171,37 @@ export default function Map({ coordinates, moder }) {
       };
 
       map.on('load', () => {
+        map.addSource('india', {
+          type: 'geojson',
+          data: indiaGeoJSON1,
+        });
+
+        // Add fill layer for states
+        map.addLayer({
+          id: 'state-fill',
+          source: 'india',
+          type: 'fill',
+          paint: {
+            'fill-color': '#000000', // Light black for state fill
+            'fill-opacity': 0.7,
+          },
+        });
+
+        //states and districts
+        map.addLayer({
+          id: 'borders',
+          source: 'india',
+          type: 'line',
+          paint: {
+            'line-color': '#A9A9A9', // Dark white for borders
+            'line-width': [
+              'case',
+              ['==', ['get', 'boundary'], 'state'], 3, // Thicker lines for state borders
+              1, // Thinner lines for district borders
+            ],
+          },
+        });
+
         map.addSource('route11', {
           'type': 'geojson',
           'data': route11
