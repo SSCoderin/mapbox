@@ -28,7 +28,7 @@ export default function Base({setCoordinates,setModer}) {
 
       setTimeout(() => {
         navigate('/map');
-      }, 5000);
+      }, 2000);
     } catch (err) {
       console.error(err);
       setError('An error occurred while fetching coordinates.'); // Set error message

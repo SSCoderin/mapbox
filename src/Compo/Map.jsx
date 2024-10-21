@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
-// import * as turf from '@turf/turf';
+import * as turf from '@turf/turf';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '../App.css';
 import indiaGeoJSON from './Indian_States.json';
 import indiaGeoJSON1 from './india.geojson';
 import indiaGeoJSON3 from './india-states.geojson';
-
+import Plane from "./plane1.png"
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoic2hpdmtpcmFuIiwiYSI6ImNtMjh6eHNsNjAwOWUyanF4Z3BoN21oMXQifQ.TDGNdQYvaYAS2bKyGplIuQ';
 
@@ -215,6 +215,75 @@ export default function Map({ coordinates, moder }) {
             'text-halo-color': '#000000',
             'text-halo-width': 1
           }
+        });
+
+        //plane animation 
+        map.loadImage(Plane, (error, image) => {
+          if (error) throw error;
+          map.addImage('plane', image);
+    
+          // Add a source for the animated point
+          map.addSource('plane-point', {
+            'type': 'geojson',
+            'data': {
+              'type': 'FeatureCollection',
+              'features': [
+                {
+                  'type': 'Feature',
+                  'geometry': {
+                    'type': 'Point',
+                    'coordinates': origin // Start at the origin
+                  }
+                }
+              ]
+            }
+          });
+    
+          // Add the plane as a symbol layer
+          map.addLayer({
+            'id': 'plane-layer',
+            'source': 'plane-point',
+            'type': 'symbol',
+            'layout': {
+              'icon-image': 'plane',
+              'icon-size': 0.5,
+              'icon-rotate': ['get', 'bearing'], // Optionally rotate based on bearing
+              'icon-rotation-alignment': 'map'
+            }
+          });
+    
+          // Animation logic
+          let progress = 0;
+          const animationSpeed = 0.005; // Adjust speed for the animation
+    
+          function animatePlane() {
+            progress += animationSpeed;
+            if (progress > 1) progress = 1;
+    
+            // Calculate the current position along the line
+            const currentPosition = turf.along(route.features[0], progress * turf.length(route.features[0]));
+    
+            // Update the plane position
+            map.getSource('plane-point').setData({
+              'type': 'FeatureCollection',
+              'features': [
+                {
+                  'type': 'Feature',
+                  'geometry': {
+                    'type': 'Point',
+                    'coordinates': currentPosition.geometry.coordinates
+                  }
+                }
+              ]
+            });
+    
+            if (progress < 1) {
+              requestAnimationFrame(animatePlane);
+            }
+          }
+    
+          // Start the animation
+          animatePlane();
         });
 
         setMap(map);
