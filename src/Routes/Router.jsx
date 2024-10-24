@@ -10,8 +10,8 @@ export default function Router() {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Base setCoordinates={setCoordinates} setModer={setModer} />} />
-          <Route path="/map" element={<Map coordinates={coordinates} moder={moder} />} />
+          {/* <Route path="/" element={<Base />} /> */}
+          <Route path="/" element={<Map />} />
         </Routes>
       </BrowserRouter>
     </>

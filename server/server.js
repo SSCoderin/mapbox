@@ -58,7 +58,7 @@ app.post('/get-coordinates', (req, res) => {
       JOIN closer.train_tbl src ON src.city_name = ?
       WHERE dest.city_name = ?;
     `;
-  } else if (mode === 'TFT') {
+  } else if (mode === 'TFT' || mode === "ALL") {
     query += `
         SELECT 
           src.city_name AS source_city, 
@@ -145,7 +145,7 @@ app.post('/get-coordinates', (req, res) => {
       }
     });
   }
-  else if (mode === "TFT"){
+  else if (mode === "TFT" || mode === "ALL"){
     db.query(query, [destinationCity, sourceCity], (err, results) => {
       if (err) {
         console.error('Error querying the database:', err);
