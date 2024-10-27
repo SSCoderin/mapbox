@@ -126,245 +126,245 @@ export default function Map() {
     }
 
 
-    // if (moder === "F") {
-    //   const route = {
-    //     'type': 'FeatureCollection',
-    //     'features': [
-    //       {
-    //         'type': 'Feature',
-    //         'geometry': {
-    //           'type': 'LineString',
-    //           'coordinates': [origin, destination]
-    //         }
-    //       }
-    //     ]
-    //   };
-    //   map.on('load', () => {
-    //     map.addSource('india', {
-    //       type: 'geojson',
-    //       data: indiaGeoJSON1,
-    //     });
+    if (moder === "F") {
+      const route = {
+        'type': 'FeatureCollection',
+        'features': [
+          {
+            'type': 'Feature',
+            'geometry': {
+              'type': 'LineString',
+              'coordinates': [origin, destination]
+            }
+          }
+        ]
+      };
+      map.on('load', () => {
+        map.addSource('india', {
+          type: 'geojson',
+          data: indiaGeoJSON1,
+        });
 
-    //     // Add fill layer for states
-    //     map.addLayer({
-    //       id: 'state-fill',
-    //       source: 'india',
-    //       type: 'fill',
-    //       paint: {
-    //         'fill-color': '#000000', // Light black for state fill
-    //         'fill-opacity': 0.7,
-    //       },
-    //     });
+        // Add fill layer for states
+        map.addLayer({
+          id: 'state-fill',
+          source: 'india',
+          type: 'fill',
+          paint: {
+            'fill-color': '#000000', // Light black for state fill
+            'fill-opacity': 0.7,
+          },
+        });
 
-    //     //states and districts
-    //     // map.addLayer({
-    //     //   id: 'borders',
-    //     //   source: 'india',
-    //     //   type: 'line',
-    //     //   paint: {
-    //     //     'line-color': '#A9A9A9', // Dark white for borders
-    //     //     'line-width': [
-    //     //       'case',
-    //     //       ['==', ['get', 'boundary'], 'state'], 3, // Thicker lines for state borders
-    //     //       1, // Thinner lines for district borders
-    //     //     ],
-    //     //   },
-    //     // });
+        //states and districts
+        // map.addLayer({
+        //   id: 'borders',
+        //   source: 'india',
+        //   type: 'line',
+        //   paint: {
+        //     'line-color': '#A9A9A9', // Dark white for borders
+        //     'line-width': [
+        //       'case',
+        //       ['==', ['get', 'boundary'], 'state'], 3, // Thicker lines for state borders
+        //       1, // Thinner lines for district borders
+        //     ],
+        //   },
+        // });
 
-    //     map.addSource('route', {
-    //       'type': 'geojson',
-    //       'data': route
-    //     });
+        map.addSource('route', {
+          'type': 'geojson',
+          'data': route
+        });
 
-    //     map.addSource('origin', {
-    //       'type': 'geojson',
-    //       'data': {
-    //         'type': 'FeatureCollection',
-    //         'features': [
-    //           {
-    //             'type': 'Feature',
-    //             'geometry': {
-    //               'type': 'Point',
-    //               'coordinates': origin
-    //             },
-    //             'properties': {
-    //               'title': coordinates.sourceCity.city_name // Label for the source
-    //             }
-    //           }
-    //         ]
-    //       }
-    //     });
+        map.addSource('origin', {
+          'type': 'geojson',
+          'data': {
+            'type': 'FeatureCollection',
+            'features': [
+              {
+                'type': 'Feature',
+                'geometry': {
+                  'type': 'Point',
+                  'coordinates': origin
+                },
+                'properties': {
+                  'title': coordinates.sourceCity.city_name // Label for the source
+                }
+              }
+            ]
+          }
+        });
 
-    //     map.addSource('destination', {
-    //       'type': 'geojson',
-    //       'data': {
-    //         'type': 'FeatureCollection',
-    //         'features': [
-    //           {
-    //             'type': 'Feature',
-    //             'geometry': {
-    //               'type': 'Point',
-    //               'coordinates': destination
-    //             },
-    //             'properties': {
-    //               'title': coordinates.destinationCity.city_name // Label for the source
-    //             }
-    //           }
-    //         ]
-    //       }
-    //     });
+        map.addSource('destination', {
+          'type': 'geojson',
+          'data': {
+            'type': 'FeatureCollection',
+            'features': [
+              {
+                'type': 'Feature',
+                'geometry': {
+                  'type': 'Point',
+                  'coordinates': destination
+                },
+                'properties': {
+                  'title': coordinates.destinationCity.city_name // Label for the source
+                }
+              }
+            ]
+          }
+        });
 
-    //     // Add the route line
-    //     map.addLayer({
-    //       'id': 'route',
-    //       'source': 'route',
-    //       'type': 'line',
-    //       'paint': {
-    //         'line-width': 2,
-    //         'line-color': '#4682B4'
-    //       }
-    //     });
+        // Add the route line
+        map.addLayer({
+          'id': 'route',
+          'source': 'route',
+          'type': 'line',
+          'paint': {
+            'line-width': 2,
+            'line-color': '#4682B4'
+          }
+        });
 
-    //     map.addLayer({
-    //       'id': 'origin',
-    //       'source': 'origin',
-    //       'type': 'circle',
-    //       'paint': {
-    //         'circle-radius': 6,
-    //         'circle-color': '#ff0000', // Green color for glowing point
-    //         'circle-blur': 0.5, // Blur effect to make it glow
-    //         'circle-opacity': 1 // Slight transparency for glowing effect
-    //       }
-    //     });
+        map.addLayer({
+          'id': 'origin',
+          'source': 'origin',
+          'type': 'circle',
+          'paint': {
+            'circle-radius': 6,
+            'circle-color': '#ff0000', // Green color for glowing point
+            'circle-blur': 0.5, // Blur effect to make it glow
+            'circle-opacity': 1 // Slight transparency for glowing effect
+          }
+        });
 
-    //     //hide existing labels
-    //     map.getStyle().layers.forEach((layer) => {
-    //       if (layer.type === 'symbol' && layer.layout['text-field']) {
-    //         map.setLayoutProperty(layer.id, 'visibility', 'none');
-    //       }
-    //     });
+        //hide existing labels
+        map.getStyle().layers.forEach((layer) => {
+          if (layer.type === 'symbol' && layer.layout['text-field']) {
+            map.setLayoutProperty(layer.id, 'visibility', 'none');
+          }
+        });
 
-    //     // Add glowing destination point
-    //     map.addLayer({
-    //       'id': 'destination',
-    //       'source': 'destination',
-    //       'type': 'circle',
-    //       'paint': {
-    //         'circle-radius': 6,
-    //         'circle-color': '#ff0000', // Red color for glowing point
-    //         'circle-blur': 0.5, // Blur effect to make it glow
-    //         'circle-opacity': 1 // Slight transparency for glowing effect
-    //       }
-    //     });
+        // Add glowing destination point
+        map.addLayer({
+          'id': 'destination',
+          'source': 'destination',
+          'type': 'circle',
+          'paint': {
+            'circle-radius': 6,
+            'circle-color': '#ff0000', // Red color for glowing point
+            'circle-blur': 0.5, // Blur effect to make it glow
+            'circle-opacity': 1 // Slight transparency for glowing effect
+          }
+        });
 
-    //     // Add source label
-    //     map.addLayer({
-    //       'id': 'origin-label',
-    //       'source': 'origin',
-    //       'type': 'symbol',
-    //       'layout': {
-    //         'text-field': ['get', 'title'],
-    //         'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-    //         'text-size': 12,
-    //         'text-offset': [0, 1.5]
-    //       },
-    //       'paint': {
-    //         'text-color': '#ffffff', // White color to contrast with the dark map
-    //         'text-halo-color': '#000000',
-    //         'text-halo-width': 1
-    //       }
-    //     });
+        // Add source label
+        map.addLayer({
+          'id': 'origin-label',
+          'source': 'origin',
+          'type': 'symbol',
+          'layout': {
+            'text-field': ['get', 'title'],
+            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+            'text-size': 12,
+            'text-offset': [0, 1.5]
+          },
+          'paint': {
+            'text-color': '#ffffff', // White color to contrast with the dark map
+            'text-halo-color': '#000000',
+            'text-halo-width': 1
+          }
+        });
 
-    //     // Add destination label
-    //     map.addLayer({
-    //       'id': 'destination-label',
-    //       'source': 'destination',
-    //       'type': 'symbol',
-    //       'layout': {
-    //         'text-field': ['get', 'title'],
-    //         'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-    //         'text-size': 12,
-    //         'text-offset': [0, 1.5]
-    //       },
-    //       'paint': {
-    //         'text-color': '#ffffff', // White color to contrast with the dark map
-    //         'text-halo-color': '#000000',
-    //         'text-halo-width': 1
-    //       }
-    //     });
+        // Add destination label
+        map.addLayer({
+          'id': 'destination-label',
+          'source': 'destination',
+          'type': 'symbol',
+          'layout': {
+            'text-field': ['get', 'title'],
+            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+            'text-size': 12,
+            'text-offset': [0, 1.5]
+          },
+          'paint': {
+            'text-color': '#ffffff', // White color to contrast with the dark map
+            'text-halo-color': '#000000',
+            'text-halo-width': 1
+          }
+        });
 
-    //     //plane animation 
-    //     // map.loadImage(Plane, (error, image) => {
-    //     //   if (error) throw error;
-    //     //   map.addImage('plane', image);
+        // plane animation 
+        map.loadImage(Plane, (error, image) => {
+          if (error) throw error;
+          map.addImage('plane', image);
 
-    //     //   // Add a source for the animated point
-    //     //   map.addSource('plane-point', {
-    //     //     'type': 'geojson',
-    //     //     'data': {
-    //     //       'type': 'FeatureCollection',
-    //     //       'features': [
-    //     //         {
-    //     //           'type': 'Feature',
-    //     //           'geometry': {
-    //     //             'type': 'Point',
-    //     //             'coordinates': origin // Start at the origin
-    //     //           }
-    //     //         }
-    //     //       ]
-    //     //     }
-    //     //   });
+          // Add a source for the animated point
+          map.addSource('plane-point', {
+            'type': 'geojson',
+            'data': {
+              'type': 'FeatureCollection',
+              'features': [
+                {
+                  'type': 'Feature',
+                  'geometry': {
+                    'type': 'Point',
+                    'coordinates': origin // Start at the origin
+                  }
+                }
+              ]
+            }
+          });
 
-    //     //   // Add the plane as a symbol layer
-    //     //   map.addLayer({
-    //     //     'id': 'plane-layer',
-    //     //     'source': 'plane-point',
-    //     //     'type': 'symbol',
-    //     //     'layout': {
-    //     //       'icon-image': 'plane',
-    //     //       'icon-size': 0.5,
-    //     //       'icon-rotate': ['get', 'bearing'], // Optionally rotate based on bearing
-    //     //       'icon-rotation-alignment': 'map'
-    //     //     }
-    //     //   });
+          // Add the plane as a symbol layer
+          map.addLayer({
+            'id': 'plane-layer',
+            'source': 'plane-point',
+            'type': 'symbol',
+            'layout': {
+              'icon-image': 'plane',
+              'icon-size': 0.5,
+              'icon-rotate': ['get', 'bearing'], // Optionally rotate based on bearing
+              'icon-rotation-alignment': 'map'
+            }
+          });
 
-    //     //   // Animation logic
-    //     //   let progress = 0;
-    //     //   const animationSpeed = 0.005; // Adjust speed for the animation
+          // Animation logic
+          let progress = 0;
+          const animationSpeed = 0.005; // Adjust speed for the animation
 
-    //     //   function animatePlane() {
-    //     //     progress += animationSpeed;
-    //     //     if (progress > 1) progress = 1;
+          function animatePlane() {
+            progress += animationSpeed;
+            if (progress > 1) progress = 1;
 
-    //     //     // Calculate the current position along the line
-    //     //     const currentPosition = turf.along(route.features[0], progress * turf.length(route.features[0]));
+            // Calculate the current position along the line
+            const currentPosition = turf.along(route.features[0], progress * turf.length(route.features[0]));
 
-    //     //     // Update the plane position
-    //     //     map.getSource('plane-point').setData({
-    //     //       'type': 'FeatureCollection',
-    //     //       'features': [
-    //     //         {
-    //     //           'type': 'Feature',
-    //     //           'geometry': {
-    //     //             'type': 'Point',
-    //     //             'coordinates': currentPosition.geometry.coordinates
-    //     //           }
-    //     //         }
-    //     //       ]
-    //     //     });
+            // Update the plane position
+            map.getSource('plane-point').setData({
+              'type': 'FeatureCollection',
+              'features': [
+                {
+                  'type': 'Feature',
+                  'geometry': {
+                    'type': 'Point',
+                    'coordinates': currentPosition.geometry.coordinates
+                  }
+                }
+              ]
+            });
 
-    //     //     if (progress < 1) {
-    //     //       requestAnimationFrame(animatePlane);
-    //     //     }
-    //     //   }
+            if (progress < 1) {
+              requestAnimationFrame(animatePlane);
+            }
+          }
 
-    //     //   // Start the animation
-    //     //   animatePlane();
-    //     // });
+          // Start the animation
+          animatePlane();
+        });
 
-    //     setMap(map);
-    //   });
-    // }
+        setMap(map);
+      });
+    }
 
     // if (moder === "T") {
     //   const route = {
@@ -1926,6 +1926,104 @@ export default function Map() {
           data: indiaGeoJSON1,
         });
 
+        map.addSource('origin', {
+          'type': 'geojson',
+          'data': {
+            'type': 'FeatureCollection',
+            'features': [
+              {
+                'type': 'Feature',
+                'geometry': {
+                  'type': 'Point',
+                  'coordinates': origin
+                },
+                'properties': {
+                  'title': coordinates.sourceCity.city_name // Label for the source
+                }
+              }
+            ]
+          }
+        });
+
+        map.addLayer({
+          'id': 'origin',
+          'source': 'origin',
+          'type': 'circle',
+          'paint': {
+            'circle-radius': 10,
+            'circle-color': '#ff0000', // Green color for glowing point
+            'circle-blur': 0.5, // Blur effect to make it glow
+            'circle-opacity': 1 // Slight transparency for glowing effect
+          }
+        });
+
+        map.addLayer({
+          id: 'origin-label',
+          source: 'origin',
+          type: 'symbol',
+          layout: {
+            'text-field': ['get', 'title'],
+            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+            'text-size': 12,
+            'text-offset': [0, 1.5],
+          },
+          paint: {
+            'text-color': '#ffffff',
+            'text-halo-color': '#000000',
+            'text-halo-width': 1,
+          },
+        });
+
+        setTimeout(() => {
+          map.addSource('destination', {
+            'type': 'geojson',
+            'data': {
+              'type': 'FeatureCollection',
+              'features': [
+                {
+                  'type': 'Feature',
+                  'geometry': {
+                    'type': 'Point',
+                    'coordinates': destination
+                  },
+                  'properties': {
+                    'title': coordinates.destinationCity.city_name // Label for the source
+                  }
+                }
+              ]
+            }
+          });
+  
+          map.addLayer({
+            'id': 'destination',
+            'source': 'destination',
+            'type': 'circle',
+            'paint': {
+              'circle-radius': 10,
+              'circle-color': '#ff0000', // Color for glowing destination point
+              'circle-blur': 0.5, // Blur effect to make it glow
+              'circle-opacity': 1 // Slight transparency for glowing effect
+            }
+          });
+  
+          map.addLayer({
+            'id': 'destination-label',
+            'source': 'destination',
+            'type': 'symbol',
+            'layout': {
+              'text-field': ['get', 'title'],
+              'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+              'text-size': 12,
+              'text-offset': [0, 1.5]
+            },
+            'paint': {
+              'text-color': '#ffffff', // White color to contrast with the dark map
+              'text-halo-color': '#000000',
+              'text-halo-width': 1
+            }
+          });
+        }, 1000);
+
         map.addSource('routeF', {
           'type': 'geojson',
           'data': routeF
@@ -1966,43 +2064,7 @@ export default function Map() {
           'data': routeTFT3
         });
 
-        map.addSource('origin', {
-          'type': 'geojson',
-          'data': {
-            'type': 'FeatureCollection',
-            'features': [
-              {
-                'type': 'Feature',
-                'geometry': {
-                  'type': 'Point',
-                  'coordinates': origin
-                },
-                'properties': {
-                  'title': coordinates.sourceCity.city_name // Label for the source
-                }
-              }
-            ]
-          }
-        });
-
-        map.addSource('destination', {
-          'type': 'geojson',
-          'data': {
-            'type': 'FeatureCollection',
-            'features': [
-              {
-                'type': 'Feature',
-                'geometry': {
-                  'type': 'Point',
-                  'coordinates': destination
-                },
-                'properties': {
-                  'title': coordinates.destinationCity.city_name // Label for the source
-                }
-              }
-            ]
-          }
-        });
+        
 
         map.addSource('intermediate1Teir1', {
           'type': 'geojson',
@@ -2159,7 +2221,7 @@ export default function Map() {
             'line-color': '#E1D9D1'
           }
         });
-        
+
         map.addLayer({
           'id': 'intermediate1Teir1',
           'source': 'intermediate1Teir1',
@@ -2208,53 +2270,18 @@ export default function Map() {
           }
         });
 
-        map.addLayer({
-          'id': 'origin',
-          'source': 'origin',
-          'type': 'circle',
-          'paint': {
-            'circle-radius': 10,
-            'circle-color': '#ff0000', // Green color for glowing point
-            'circle-blur': 0.5, // Blur effect to make it glow
-            'circle-opacity': 1 // Slight transparency for glowing effect
-          }
-        });
 
-        map.addLayer({
-          'id': 'destination',
-          'source': 'destination',
-          'type': 'circle',
-          'paint': {
-            'circle-radius': 10,
-            'circle-color': '#ff0000', // Color for glowing destination point
-            'circle-blur': 0.5, // Blur effect to make it glow
-            'circle-opacity': 1 // Slight transparency for glowing effect
-          }
-        });
 
-        map.getStyle().layers.forEach((layer) => {
-          if (layer.type === 'symbol' && layer.layout['text-field']) {
-            map.setLayoutProperty(layer.id, 'visibility', 'none');
-          }
-        });
+        
+
+        // map.getStyle().layers.forEach((layer) => {
+        //   if (layer.type === 'symbol' && layer.layout['text-field']) {
+        //     map.setLayoutProperty(layer.id, 'visibility', 'none');
+        //   }
+        // });
 
         // Add source label
-        map.addLayer({
-          id: 'origin-label',
-          source: 'origin',
-          type: 'symbol',
-          layout: {
-            'text-field': ['get', 'title'],
-            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-            'text-size': 12,
-            'text-offset': [0, 1.5],
-          },
-          paint: {
-            'text-color': '#ffffff',
-            'text-halo-color': '#000000',
-            'text-halo-width': 1,
-          },
-        });
+
 
         // Add intermediate1Teir1 label
         map.addLayer({
@@ -2329,22 +2356,7 @@ export default function Map() {
         });
 
         // Add destination label
-        map.addLayer({
-          'id': 'destination-label',
-          'source': 'destination',
-          'type': 'symbol',
-          'layout': {
-            'text-field': ['get', 'title'],
-            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-            'text-size': 12,
-            'text-offset': [0, 1.5]
-          },
-          'paint': {
-            'text-color': '#ffffff', // White color to contrast with the dark map
-            'text-halo-color': '#000000',
-            'text-halo-width': 1
-          }
-        });
+        
 
 
         setMap(map);
