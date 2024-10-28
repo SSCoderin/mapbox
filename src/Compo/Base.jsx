@@ -12,12 +12,13 @@ const MapComponent = ({
   intermediate2Location
 }) => {
   const mapContainerRef = useRef(null);
-  const mapRef = useRef(null);
+  // const mapRef = useRef(null);
   const markersRef = useRef({});
   const labelsRef = useRef({});
   const planeMarkersRef = useRef({});
   const animationFrameRef = useRef(null);
   const [visibleLocations, setVisibleLocations] = useState(new Set());
+  const [mapRef, setMapRef] = useState(null);
 
   // Initial zoomed out view
   const INITIAL_VIEW = {
@@ -341,7 +342,8 @@ const MapComponent = ({
     animateStep();
   };
 
-  const initializeAnimationSequence = async (map) => {
+  const initializeAnimationSequence = async () => {
+    console.log(mapRef)
     if (!hasValidProps()) return;
 
     // Add initial markers but keep them invisible
@@ -351,7 +353,7 @@ const MapComponent = ({
     // Wait for initial load
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    map.easeTo({
+    mapRef.easeTo({
       center: [78.9629, 20.5937],
       zoom: 2,
       duration: 3000,
@@ -363,7 +365,7 @@ const MapComponent = ({
 
     // Smooth zoom to fit all points
     const bounds = calculateBounds();
-    map.fitBounds(bounds, {
+    mapRef.fitBounds(bounds, {
       padding: 100,
       duration: 3000,
       pitch: 45,
@@ -374,8 +376,8 @@ const MapComponent = ({
     await new Promise(resolve => setTimeout(resolve, 3000));
 
     // Show source and destination markers with a slight delay
-    addMarkerWithLabel(map, sourceLocation.coordinates, sourceLocation.name, 'source', false);
-    addMarkerWithLabel(map, destinationLocation.coordinates, destinationLocation.name, 'destination', false);
+    addMarkerWithLabel(mapRef, sourceLocation.coordinates, sourceLocation.name, 'source', false);
+    addMarkerWithLabel(mapRef, destinationLocation.coordinates, destinationLocation.name, 'destination', false);
     setTimeout(() => {
       showMarker('source');
       showMarker('destination');
@@ -383,7 +385,7 @@ const MapComponent = ({
 
     // Setup path layers
     ['path1', 'path2'].forEach(pathId => {
-      map.addSource(pathId, {
+      mapRef.addSource(pathId, {
         type: "geojson",
         data: {
           type: "Feature",
@@ -394,7 +396,7 @@ const MapComponent = ({
         },
       });
 
-      map.addLayer({
+      mapRef.addLayer({
         id: pathId,
         type: "line",
         source: pathId,
@@ -420,12 +422,12 @@ const MapComponent = ({
     ];
 
     await new Promise(resolve => {
-      animatePath(map, path1, "path1", intermediate1Location.coordinates, () => {
-        addMarkerWithLabel(map, intermediate1Location.coordinates, intermediate1Location.name, 'intermediate1', true);
+      animatePath(mapRef, path1, "path1", intermediate1Location.coordinates, () => {
+        addMarkerWithLabel(mapRef, intermediate1Location.coordinates, intermediate1Location.name, 'intermediate1', true);
       });
 
       const checkCompletion = () => {
-        const source = map.getSource("path1");
+        const source = mapRef.getSource("path1");
         if (source && source._data.geometry.coordinates.length === path1.length) {
           resolve();
         } else {
@@ -441,13 +443,13 @@ const MapComponent = ({
       ...createArc(intermediate2Location.coordinates, destinationLocation.coordinates)
     ];
 
-    animatePath(map, path2, "path2", intermediate2Location.coordinates, () => {
-      addMarkerWithLabel(map, intermediate2Location.coordinates, intermediate2Location.name, 'intermediate2', true);
+    animatePath(mapRef, path2, "path2", intermediate2Location.coordinates, () => {
+      addMarkerWithLabel(mapRef, intermediate2Location.coordinates, intermediate2Location.name, 'intermediate2', true);
     });
   };
 
   useEffect(() => {
-    if (!mapContainerRef.current) return;
+
 
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
@@ -461,31 +463,67 @@ const MapComponent = ({
       interactive: false
     });
 
-    mapRef.current = map;
+    // Add fog and terrain configuration
+    // map.on('style.load', () => {
+    //   // Configure fog effect
+    //   map.setFog({
+    //     'color': 'rgb(186, 210, 235)', // Day sky color
+    //     'high-color': 'rgb(36, 92, 223)', // Blue atmosphere
+    //     'horizon-blend': 0.02, // Atmosphere thickness
+    //     'space-color': 'rgb(11, 11, 25)', // Dark space
+    //     'star-intensity': 0.6 // Brightness of stars
+    //   });
 
-    map.on('load', () => {
-      // Only initialize animation sequence if we have valid props
-      if (hasValidProps()) {
-        initializeAnimationSequence(map);
-      }
+    //   // Add terrain if available in the style
+    //   if (map.getSource('mapbox-dem')) {
+    //     map.setTerrain({
+    //       'source': 'mapbox-dem',
+    //       'exaggeration': 1.5 // Terrain exaggeration
+    //     });
+    //   }
+    // });
+
+    // Add quality improvement handlers
+    map.on('movestart', () => {
+      map.getCanvas().style.imageRendering = 'high-quality';
     });
 
-    return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
-      Object.values(markersRef.current).forEach(({ marker, label }) => {
-        marker.remove();
-        label.remove();
-      });
-      Object.values(planeMarkersRef.current).forEach(marker => {
-        marker.remove();
-      });
-      if (mapRef.current) {
-        mapRef.current.remove();
-      }
-    };
-  }, [sourceLocation, destinationLocation, intermediate1Location, intermediate2Location]);
+    map.on('moveend', () => {
+      map.getCanvas().style.imageRendering = 'auto';
+    });
+    
+    setMapRef(map);
+  }, [])
+
+  useEffect(() => {
+    if (!mapContainerRef.current) return;
+
+    if (!mapRef) return;
+
+
+    // mapRef.on('style.load', () => {
+    // Only initialize animation sequence if we have valid props
+    if (hasValidProps()) {
+      initializeAnimationSequence();
+    }
+    // });
+
+    // return () => {
+    //   if (animationFrameRef.current) {
+    //     cancelAnimationFrame(animationFrameRef.current);
+    //   }
+    //   Object.values(markersRef.current).forEach(({ marker, label }) => {
+    //     marker.remove();
+    //     label.remove();
+    //   });
+    //   Object.values(planeMarkersRef.current).forEach(marker => {
+    //     marker.remove();
+    //   });
+    //   if (mapRef) {
+    //     mapRef.remove();
+    //   }
+    // };
+  }, [sourceLocation, destinationLocation, intermediate1Location, intermediate2Location, mapRef]);
 
   return <div ref={mapContainerRef} style={{ height: "700px", width: "100%" }} />;
 };
