@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import MapComponent from './Base';
+import axios from "axios";
 import Plane from "./plane1.png"
 import './wayport.css';
 
@@ -7,38 +8,74 @@ const WayportContainer = () => {
     const [isNavHidden, setIsNavHidden] = useState(false);
     const [isAnimationStarted, setIsAnimationStarted] = useState(false);
     const [mapProps, setMapProps] = useState(null);
+    const [sourceCity, setSourceCity] = useState('');
+    const [destinationCity, setDestinationCity] = useState('');
+    const [mode, setMode] = useState('ALL');
+    const [coordinates, setCoordinates] = useState(null);
 
-    const mapData = {
-        india: {
+    const createMapData = (coordinates) => {
+        if (!coordinates) return null;
+        
+        return {
             sourceLocation: {
-                coordinates: [76.961632, 11.004556],
-                name: "Coimbatore"
+                coordinates: [coordinates.sourceCity?.longitude, coordinates.sourceCity?.latitude],
+                name: coordinates.sourceCity?.city_name
             },
             destinationLocation: {
-                coordinates: [77.2090, 28.6139],
-                name: "Delhi"
+                coordinates: [coordinates.destinationCity?.longitude, coordinates.destinationCity?.latitude],
+                name: coordinates.destinationCity?.city_name
             },
             intermediate1Location: {
-                coordinates: [78.4867, 17.3850],
-                name: "Hyderabad"
+                coordinates: [coordinates.TFTnearestStations?.src_nearest_a1?.longitude, coordinates.TFTnearestStations?.src_nearest_a1?.latitude],
+                name: coordinates.TFTnearestStations?.src_nearest_a1?.city_name
             },
             intermediate2Location: {
-                coordinates: [75.3433, 19.8762],
-                name: "Aurangabad"
+                coordinates: [coordinates.TFTnearestStations?.src_nearest_a3?.longitude, coordinates.TFTnearestStations?.src_nearest_a3?.latitude],
+                name: coordinates.TFTnearestStations?.src_nearest_a3?.city_name
             }
+        };
+    };
+
+    const handleGoClick = async (e) => {
+        e.preventDefault();
+
+        if (!sourceCity || !destinationCity) {
+            alert('Please enter both source and destination cities');
+            return;
+        }
+
+        try {
+            const response = await axios.post('http://localhost:5000/get-coordinates', {
+                sourceCity,
+                destinationCity,
+                mode
+            });
+            
+            if (response.data) {
+                setCoordinates(response.data);
+                const mapData = createMapData(response.data);
+                
+                if (mapData) {
+                    setIsNavHidden(true);
+                    setIsAnimationStarted(true);
+                    setMapProps(mapData);
+                } else {
+                    alert('Invalid coordinate data received');
+                }
+            }
+        } catch (err) {
+            console.error('Error fetching coordinates:', err);
+            alert('Error fetching coordinates. Please try again.');
+            setIsAnimationStarted(false);
         }
     };
 
-    const handleGoClick = () => {
-        setIsNavHidden(true);
-        setIsAnimationStarted(true);
-        // Only set the map props when GO is clicked
-        setMapProps(mapData.india);
+    const handleInputChange = (setter) => (e) => {
+        setter(e.target.value.toUpperCase());
     };
 
     return (
         <div className="container">
-            {/* Top Navigation Bar */}
             <nav className={`wayport-nav ${isNavHidden ? 'hidden' : ''}`}>
                 <div className="nav-content">
                     <div className="wayport-logo">
@@ -51,22 +88,25 @@ const WayportContainer = () => {
                 </div>
             </nav>
 
-            {/* Search Container */}
             <div className={`search-container ${isNavHidden ? 'moved' : 'initial'}`}>
                 <div className="search-inputs">
                     <input
                         type="text"
+                        placeholder="Source City"
                         className="search-input"
-                        placeholder="Source"
-                        disabled
-                        value="Chennai"
+                        value={sourceCity}
+                        onChange={handleInputChange(setSourceCity)}
+                        disabled={isAnimationStarted}
+                        required
                     />
                     <input
                         type="text"
+                        placeholder="Destination City"
                         className="search-input"
-                        placeholder="Destination"
-                        disabled
-                        value="Delhi"
+                        value={destinationCity}
+                        onChange={handleInputChange(setDestinationCity)}
+                        disabled={isAnimationStarted}
+                        required
                     />
                     <input
                         type="date"
@@ -77,18 +117,15 @@ const WayportContainer = () => {
                     <button
                         className="go-button"
                         onClick={handleGoClick}
-                        disabled={isAnimationStarted}
+                        disabled={isAnimationStarted || !sourceCity || !destinationCity}
                     >
                         GO
                     </button>
                 </div>
             </div>
 
-            {/* Map Container */}
             <div className={`map-container ${isNavHidden ? 'expanded' : ''}`}>
-                <MapComponent
-                    {...mapProps} // Spread operator will pass null initially and the actual props after GO is clicked
-                />
+                {<MapComponent {...mapProps} />}
             </div>
         </div>
     );
