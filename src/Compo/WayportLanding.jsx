@@ -15,7 +15,7 @@ const WayportContainer = () => {
 
     const createMapData = (coordinates) => {
         if (!coordinates) return null;
-        
+
         return {
             sourceLocation: {
                 coordinates: [coordinates.sourceCity?.longitude, coordinates.sourceCity?.latitude],
@@ -32,7 +32,15 @@ const WayportContainer = () => {
             intermediate2Location: {
                 coordinates: [coordinates.TFTnearestStations?.src_nearest_a3?.longitude, coordinates.TFTnearestStations?.src_nearest_a3?.latitude],
                 name: coordinates.TFTnearestStations?.src_nearest_a3?.city_name
-            }
+            },
+            // intermediate1Location: {
+            //     coordinates: [coordinates.nearestStations?.nearest_a1?.longitude, coordinates.nearestStations?.nearest_a1?.latitude],
+            //     name: coordinates.nearestStations?.nearest_a1?.city_name
+            // },
+            // intermediate2Location: {
+            //     coordinates: [coordinates.nearestStations?.nearest_a3?.longitude, coordinates.nearestStations?.nearest_a3?.latitude],
+            //     name: coordinates.nearestStations?.nearest_a3?.city_name
+            // }
         };
     };
 
@@ -50,11 +58,11 @@ const WayportContainer = () => {
                 destinationCity,
                 mode
             });
-            
+
             if (response.data) {
                 setCoordinates(response.data);
                 const mapData = createMapData(response.data);
-                
+
                 if (mapData) {
                     setIsNavHidden(true);
                     setIsAnimationStarted(true);

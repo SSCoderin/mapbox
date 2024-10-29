@@ -14,15 +14,15 @@ const MapComponent = ({
   const mapContainerRef = useRef(null);
   // const mapRef = useRef(null);
   const markersRef = useRef({});
-  const labelsRef = useRef({});
-  const planeMarkersRef = useRef({});
+  // const labelsRef = useRef({});
+  // const planeMarkersRef = useRef({});
   const animationFrameRef = useRef(null);
-  const [visibleLocations, setVisibleLocations] = useState(new Set());
+  // const [visibleLocations, setVisibleLocations] = useState(new Set());
   const [mapRef, setMapRef] = useState(null);
 
   // Initial zoomed out view
   const INITIAL_VIEW = {
-    center: [139.6503, 35.6762], // Tokyo coordinates (longitude, latitude)
+    center: [-95.712891, 37.09024],
     zoom: 0.7,
     pitch: 0,
     bearing: 0
@@ -116,51 +116,51 @@ const MapComponent = ({
     return markerEl;
   };
 
-  const createPlaneMarker = () => {
-    const el = document.createElement('div');
-    el.className = 'plane-marker';
+  // const createPlaneMarker = () => {
+  //   const el = document.createElement('div');
+  //   el.className = 'plane-marker';
 
-    const style = document.createElement('style');
-    style.textContent = `
-      .plane-marker {
-        width: 24px;
-        height: 24px;
-        background-color: #ffffff;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        opacity: 0;
-        transition: opacity 0.5s ease-in-out;
-      }
-      .plane-marker svg {
-        width: 16px;
-        height: 16px;
-        color: #4285f4;
-      }
-      .plane-marker.visible {
-        opacity: 1;
-      }
-      .plane-marker .plane-trail {
-        position: absolute;
-        width: 20px;
-        height: 2px;
-        background: linear-gradient(to left, rgba(66, 133, 244, 0.6), transparent);
-        transform-origin: left center;
-        pointer-events: none;
-      }
-    `;
-    document.head.appendChild(style);
+  //   const style = document.createElement('style');
+  //   style.textContent = `
+  //     .plane-marker {
+  //       width: 24px;
+  //       height: 24px;
+  //       background-color: #ffffff;
+  //       border-radius: 50%;
+  //       display: flex;
+  //       align-items: center;
+  //       justify-content: center;
+  //       box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  //       opacity: 0;
+  //       transition: opacity 0.5s ease-in-out;
+  //     }
+  //     .plane-marker svg {
+  //       width: 16px;
+  //       height: 16px;
+  //       color: #4285f4;
+  //     }
+  //     .plane-marker.visible {
+  //       opacity: 1;
+  //     }
+  //     .plane-marker .plane-trail {
+  //       position: absolute;
+  //       width: 20px;
+  //       height: 2px;
+  //       background: linear-gradient(to left, rgba(66, 133, 244, 0.6), transparent);
+  //       transform-origin: left center;
+  //       pointer-events: none;
+  //     }
+  //   `;
+  //   document.head.appendChild(style);
 
-    // Add plane icon using SVG
-    el.innerHTML = `
-      <svg viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>airplane</title> <desc>Created with Sketch Beta.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage"> <g id="Icon-Set-Filled" sketch:type="MSLayerGroup" transform="translate(-310.000000, -309.000000)" fill="#000000"> <path d="M341.207,309.82 C339.961,308.57 337.771,308.863 336.518,310.119 L330.141,316.481 L318.313,312.061 C317.18,311.768 316.039,311.389 314.634,312.798 C313.917,313.516 312.427,315.01 314.634,317.221 L322.744,323.861 L317.467,329.127 L312.543,327.896 C311.813,327.708 311.321,327.855 310.946,328.269 C310.757,328.505 309.386,329.521 310.342,330.479 L316.067,334.933 L320.521,340.658 C321.213,341.352 321.856,340.919 322.735,340.084 C323.292,339.526 323.172,339.239 323.004,338.426 L321.892,333.536 L327.133,328.277 L333.763,336.389 C335.969,338.6 337.46,337.105 338.177,336.389 C339.583,334.979 339.205,333.837 338.912,332.702 L334.529,320.854 L340.88,314.481 C342.133,313.226 342.454,311.069 341.207,309.82" id="airplane" sketch:type="MSShapeGroup"> </path> </g> </g> </g></svg>
-      <div class="plane-trail"></div>
-    `;
+  //   // Add plane icon using SVG
+  //   el.innerHTML = `
+  //     <svg viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>airplane</title> <desc>Created with Sketch Beta.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage"> <g id="Icon-Set-Filled" sketch:type="MSLayerGroup" transform="translate(-310.000000, -309.000000)" fill="#000000"> <path d="M341.207,309.82 C339.961,308.57 337.771,308.863 336.518,310.119 L330.141,316.481 L318.313,312.061 C317.18,311.768 316.039,311.389 314.634,312.798 C313.917,313.516 312.427,315.01 314.634,317.221 L322.744,323.861 L317.467,329.127 L312.543,327.896 C311.813,327.708 311.321,327.855 310.946,328.269 C310.757,328.505 309.386,329.521 310.342,330.479 L316.067,334.933 L320.521,340.658 C321.213,341.352 321.856,340.919 322.735,340.084 C323.292,339.526 323.172,339.239 323.004,338.426 L321.892,333.536 L327.133,328.277 L333.763,336.389 C335.969,338.6 337.46,337.105 338.177,336.389 C339.583,334.979 339.205,333.837 338.912,332.702 L334.529,320.854 L340.88,314.481 C342.133,313.226 342.454,311.069 341.207,309.82" id="airplane" sketch:type="MSShapeGroup"> </path> </g> </g> </g></svg>
+  //     <div class="plane-trail"></div>
+  //   `;
 
-    return el;
-  };
+  //   return el;
+  // };
 
   const createLabel = (name) => {
     const labelEl = document.createElement('div');
@@ -191,67 +191,67 @@ const MapComponent = ({
     return labelEl;
   };
 
-  const getBearing = (start, end) => {
-    const startLat = start[1] * Math.PI / 180;
-    const startLng = start[0] * Math.PI / 180;
-    const endLat = end[1] * Math.PI / 180;
-    const endLng = end[0] * Math.PI / 180;
+  // const animatePlaneAlongPath = (map, lineCoordinates, planeId, duration = 3000) => {
+  //   const planeEl = createPlaneMarker();
+  //   const plane = new mapboxgl.Marker(planeEl)
+  //     .setLngLat(lineCoordinates[0])
+  //     .addTo(map);
 
-    const dLng = endLng - startLng;
+  //   planeMarkersRef.current[planeId] = plane;
 
-    const y = Math.sin(dLng) * Math.cos(endLat);
-    const x = Math.cos(startLat) * Math.sin(endLat) -
-      Math.sin(startLat) * Math.cos(endLat) * Math.cos(dLng);
+  //   // Show plane after a short delay
+  //   setTimeout(() => {
+  //     planeEl.classList.add('visible');
+  //   }, 100);
 
-    const bearing = (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
-    return bearing;
-  };
+  //   let start = null;
+  //   const animate = (timestamp) => {
+  //     if (!start) start = timestamp;
+  //     const progress = (timestamp - start) / duration;
 
-  const animatePlaneAlongPath = (map, lineCoordinates, planeId, duration = 3000) => {
-    const planeEl = createPlaneMarker();
-    const plane = new mapboxgl.Marker(planeEl)
-      .setLngLat(lineCoordinates[0])
-      .addTo(map);
+  //     if (progress >= 1) {
+  //       // Remove plane at end of animation
+  //       plane.remove();
+  //       return;
+  //     }
 
-    planeMarkersRef.current[planeId] = plane;
+  //     // Calculate current position along the path
+  //     const currentIndex = Math.floor(progress * (lineCoordinates.length - 1));
+  //     const nextIndex = Math.min(currentIndex + 1, lineCoordinates.length - 1);
+  //     const segmentProgress = progress * (lineCoordinates.length - 1) - currentIndex;
 
-    // Show plane after a short delay
-    setTimeout(() => {
-      planeEl.classList.add('visible');
-    }, 100);
+  //     // Interpolate position
+  //     const currentPos = lineCoordinates[currentIndex];
+  //     const nextPos = lineCoordinates[nextIndex];
+  //     const currentLng = currentPos[0] + (nextPos[0] - currentPos[0]) * segmentProgress;
+  //     const currentLat = currentPos[1] + (nextPos[1] - currentPos[1]) * segmentProgress;
 
-    let start = null;
-    const animate = (timestamp) => {
-      if (!start) start = timestamp;
-      const progress = (timestamp - start) / duration;
+  //     // Calculate bearing for plane rotation
+  //     const bearing = getBearing(currentPos, nextPos);
+  //     planeEl.style.transform = `rotate(${bearing}deg)`;
 
-      if (progress >= 1) {
-        // Remove plane at end of animation
-        plane.remove();
-        return;
-      }
+  //     plane.setLngLat([currentLng, currentLat]);
+  //     animationFrameRef.current = requestAnimationFrame(animate);
+  //   };
 
-      // Calculate current position along the path
-      const currentIndex = Math.floor(progress * (lineCoordinates.length - 1));
-      const nextIndex = Math.min(currentIndex + 1, lineCoordinates.length - 1);
-      const segmentProgress = progress * (lineCoordinates.length - 1) - currentIndex;
+  //   requestAnimationFrame(animate);
+  // };
 
-      // Interpolate position
-      const currentPos = lineCoordinates[currentIndex];
-      const nextPos = lineCoordinates[nextIndex];
-      const currentLng = currentPos[0] + (nextPos[0] - currentPos[0]) * segmentProgress;
-      const currentLat = currentPos[1] + (nextPos[1] - currentPos[1]) * segmentProgress;
+  // const getBearing = (start, end) => {
+  //   const startLat = start[1] * Math.PI / 180;
+  //   const startLng = start[0] * Math.PI / 180;
+  //   const endLat = end[1] * Math.PI / 180;
+  //   const endLng = end[0] * Math.PI / 180;
 
-      // Calculate bearing for plane rotation
-      const bearing = getBearing(currentPos, nextPos);
-      planeEl.style.transform = `rotate(${bearing}deg)`;
+  //   const dLng = endLng - startLng;
 
-      plane.setLngLat([currentLng, currentLat]);
-      animationFrameRef.current = requestAnimationFrame(animate);
-    };
+  //   const y = Math.sin(dLng) * Math.cos(endLat);
+  //   const x = Math.cos(startLat) * Math.sin(endLat) -
+  //     Math.sin(startLat) * Math.cos(endLat) * Math.cos(dLng);
 
-    requestAnimationFrame(animate);
-  };
+  //   const bearing = (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
+  //   return bearing;
+  // };
 
   const addMarkerWithLabel = (map, coords, name, key, visible = false) => {
     const markerEl = createBlinkingMarker(coords);
@@ -287,19 +287,6 @@ const MapComponent = ({
     }
   };
 
-  // const hideMarker = (key) => {
-  //   if (markersRef.current[key]) {
-  //     const { markerEl, labelEl } = markersRef.current[key];
-  //     markerEl.classList.remove('visible');
-  //     labelEl.classList.remove('visible');
-  //     setVisibleLocations((prev) => {
-  //       const updatedSet = new Set(prev);
-  //       updatedSet.delete(key);
-  //       return updatedSet;
-  //     });
-  //   }
-  // };
-
   const animatePath = (map, lineCoordinates, pathId, checkPoint, onReachCheckpoint) => {
     let i = 0;
     const coordinates = [];
@@ -316,8 +303,8 @@ const MapComponent = ({
           checkpointReached = true;
           onReachCheckpoint();
           // Start plane animation from checkpoint to destination
-          const remainingPath = lineCoordinates.slice(i);
-          animatePlaneAlongPath(map, remainingPath, `${pathId}-plane`);
+          // const remainingPath = lineCoordinates.slice(i);
+          // animatePlaneAlongPath(map, remainingPath, `${pathId}-plane`);
         }
 
         i++;
@@ -369,7 +356,8 @@ const MapComponent = ({
       padding: 100,
       duration: 3000,
       pitch: 45,
-      bearing: -11.7
+      bearing: -11.7,
+      maxZoom: 4.9
     });
 
     // Wait for zoom animation to complete
@@ -455,6 +443,11 @@ const MapComponent = ({
       container: mapContainerRef.current,
       style: Styler,
       center: INITIAL_VIEW.center,
+      globe: {
+        place_label_major: false,
+        place_label_minor: false,
+        place_label_other: false
+      },
       zoom: INITIAL_VIEW.zoom,
       pitch: INITIAL_VIEW.pitch,
       bearing: INITIAL_VIEW.bearing,
@@ -491,7 +484,7 @@ const MapComponent = ({
     map.on('moveend', () => {
       map.getCanvas().style.imageRendering = 'auto';
     });
-    
+
     setMapRef(map);
   }, [])
 
@@ -499,6 +492,20 @@ const MapComponent = ({
     if (!mapContainerRef.current) return;
 
     if (!mapRef) return;
+    // Add this after map initialization
+    mapRef.on('style.load', () => {
+      const layersToHide = [
+        'settlement-major-label',  // Major cities
+        'settlement-minor-label',  // Minor cities
+        'settlement-subdivision-label', // Neighborhoods
+      ];
+
+      layersToHide.forEach(layer => {
+        if (mapRef.getLayer(layer)) {
+          mapRef.setLayoutProperty(layer, 'visibility', 'none');
+        }
+      });
+    });
 
 
     // mapRef.on('style.load', () => {
