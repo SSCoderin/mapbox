@@ -8,8 +8,8 @@ const WayportContainer = () => {
     const [isNavHidden, setIsNavHidden] = useState(false);
     const [isAnimationStarted, setIsAnimationStarted] = useState(false);
     const [mapProps, setMapProps] = useState(null);
-    const [sourceCity, setSourceCity] = useState('');
-    const [destinationCity, setDestinationCity] = useState('');
+    const [sourceCity, setSourceCity] = useState('NANDED');
+    const [destinationCity, setDestinationCity] = useState('NEW DELHI');
     const [mode, setMode] = useState('ALL');
     const [coordinates, setCoordinates] = useState(null);
 
@@ -33,6 +33,15 @@ const WayportContainer = () => {
                 coordinates: [coordinates.TFTnearestStations?.src_nearest_a3?.longitude, coordinates.TFTnearestStations?.src_nearest_a3?.latitude],
                 name: coordinates.TFTnearestStations?.src_nearest_a3?.city_name
             },
+            intermediateD1Location: {
+                coordinates: [coordinates.TFTnearestStations?.dest_nearest_a1?.longitude, coordinates.TFTnearestStations?.dest_nearest_a1?.latitude],
+                name: coordinates.TFTnearestStations?.dest_nearest_a1?.city_name
+            },
+            intermediateD2Location: {
+                coordinates: [coordinates.TFTnearestStations?.dest_nearest_a3?.longitude, coordinates.TFTnearestStations?.dest_nearest_a3?.latitude],
+                name: coordinates.TFTnearestStations?.dest_nearest_a3?.city_name
+            },
+            models: coordinates.models,
             // intermediate1Location: {
             //     coordinates: [coordinates.nearestStations?.nearest_a1?.longitude, coordinates.nearestStations?.nearest_a1?.latitude],
             //     name: coordinates.nearestStations?.nearest_a1?.city_name
@@ -53,10 +62,10 @@ const WayportContainer = () => {
         }
 
         try {
+            console.log("hi................frontend")
             const response = await axios.post('http://localhost:5000/get-coordinates', {
-                sourceCity,
-                destinationCity,
-                mode
+                source_city: sourceCity,    // Changed from sourceCity to source_city
+                desti_city: destinationCity
             });
 
             if (response.data) {
@@ -70,6 +79,7 @@ const WayportContainer = () => {
                 } else {
                     alert('Invalid coordinate data received');
                 }
+                console.log(response.data)
             }
         } catch (err) {
             console.error('Error fetching coordinates:', err);

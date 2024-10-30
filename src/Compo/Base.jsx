@@ -9,7 +9,10 @@ const MapComponent = ({
   sourceLocation,
   destinationLocation,
   intermediate1Location,
-  intermediate2Location
+  intermediate2Location,
+  intermediateD1Location,
+  intermediateD2Location,
+  models
 }) => {
   const mapContainerRef = useRef(null);
   // const mapRef = useRef(null);
@@ -20,10 +23,18 @@ const MapComponent = ({
   // const [visibleLocations, setVisibleLocations] = useState(new Set());
   const [mapRef, setMapRef] = useState(null);
 
+  console.log("Models are as follows ----> ", models);
+  // const F = models.includes(1);
+  // const T = models.includes(2);
+  // const TT = models.includes(3);
+  const TF = models?.includes(4);
+  const FT = models?.includes(5);
+  const TFT = models?.includes(6);
+
   // Initial zoomed out view
   const INITIAL_VIEW = {
     center: [-95.712891, 37.09024],
-    zoom: 0.7,
+    zoom: 0.8,
     pitch: 0,
     bearing: 0
   };
@@ -32,7 +43,9 @@ const MapComponent = ({
     return sourceLocation?.coordinates &&
       destinationLocation?.coordinates &&
       intermediate1Location?.coordinates &&
-      intermediate2Location?.coordinates;
+      intermediate2Location?.coordinates &&
+      intermediateD1Location?.coordinates &&
+      intermediateD2Location?.coordinates;
   };
 
   const calculateBounds = () => {
@@ -42,7 +55,9 @@ const MapComponent = ({
       sourceLocation.coordinates,
       destinationLocation.coordinates,
       intermediate1Location.coordinates,
-      intermediate2Location.coordinates
+      intermediate2Location.coordinates,
+      intermediateD1Location.coordinates,
+      intermediateD2Location.coordinates,
     ];
 
     const bounds = coordinates.reduce(
@@ -93,12 +108,11 @@ const MapComponent = ({
     const style = document.createElement('style');
     style.textContent = `
       .blinking-marker {
-        width: 12px;
-        height: 12px;
-        background-color: #FF0000;
+        width: 16px;
+        height: 16px;
+        background: radial-gradient(circle, rgba(9,4,101,1) 0%, rgba(9,9,121,1) 5%, rgba(4,6,94,1) 9%, rgba(0,4,70,0.17471988795518212) 77%, rgba(0,212,255,0) 100%);
         border-radius: 50%;
         animation: blink 1s infinite;
-        border: 2px solid #FFFFFF;
         opacity: 0;
         transition: opacity 0.5s ease-in-out;
       }
@@ -330,7 +344,7 @@ const MapComponent = ({
   };
 
   const initializeAnimationSequence = async () => {
-    console.log(mapRef)
+    // console.log(mapRef)
     if (!hasValidProps()) return;
 
     // Add initial markers but keep them invisible
@@ -344,7 +358,12 @@ const MapComponent = ({
       center: [78.9629, 20.5937],
       zoom: 2,
       duration: 3000,
-      pitch: 0
+      curve: 1,
+      pitch: 0,
+      easing(t) {
+        const x1 = 1, y1 = 0.01, x2 = 0.2, y2 = 1;
+        return 3 * Math.pow(1 - t, 2) * t * y1 + 3 * (1 - t) * Math.pow(t, 2) * y2 + Math.pow(t, 3);
+      }
     });
 
     await new Promise(resolve => setTimeout(resolve, 3000));
@@ -371,52 +390,41 @@ const MapComponent = ({
       showMarker('destination');
     }, 3000);
 
-    // Setup path layers
-    ['path1', 'path2'].forEach(pathId => {
-      mapRef.addSource(pathId, {
-        type: "geojson",
-        data: {
-          type: "Feature",
-          geometry: {
-            type: "LineString",
-            coordinates: [],
-          },
-        },
-      });
+    const pathF = createArc(sourceLocation.coordinates, destinationLocation.coordinates);
 
-      mapRef.addLayer({
-        id: pathId,
-        type: "line",
-        source: pathId,
-        layout: {
-          "line-join": "round",
-          "line-cap": "round",
+    // Add source and layer for pathF
+    mapRef.addSource('pathF', {
+      type: "geojson",
+      data: {
+        type: "Feature",
+        geometry: {
+          type: "LineString",
+          coordinates: [],
         },
-        paint: {
-          "line-color": pathId === 'path1' ? "#4285f4" : "#34a853",
-          "line-width": 3,
-          "line-opacity": 1,
-        },
-      });
+      },
     });
 
-    // Add delay before starting path animations
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    mapRef.addLayer({
+      id: 'pathF',
+      type: "line",
+      source: 'pathF',
+      layout: {
+        "line-join": "round",
+        "line-cap": "round",
+      },
+      paint: {
+        "line-color": "#FD1d1d",
+        "line-width": 3,
+        "line-opacity": 1,
+      },
+    });
 
-    // Animate first path
-    const path1 = [
-      ...createArc(sourceLocation.coordinates, intermediate1Location.coordinates),
-      ...createArc(intermediate1Location.coordinates, destinationLocation.coordinates)
-    ];
-
+    // Animate pathF
     await new Promise(resolve => {
-      animatePath(mapRef, path1, "path1", intermediate1Location.coordinates, () => {
-        addMarkerWithLabel(mapRef, intermediate1Location.coordinates, intermediate1Location.name, 'intermediate1', true);
-      });
-
+      animatePath(mapRef, pathF, "pathF", null, () => { });
       const checkCompletion = () => {
-        const source = mapRef.getSource("path1");
-        if (source && source._data.geometry.coordinates.length === path1.length) {
+        const source = mapRef.getSource("pathF");
+        if (source && source._data.geometry.coordinates.length === pathF.length) {
           resolve();
         } else {
           setTimeout(checkCompletion, 100);
@@ -425,20 +433,304 @@ const MapComponent = ({
       checkCompletion();
     });
 
-    // Animate second path
-    const path2 = [
-      ...createArc(sourceLocation.coordinates, intermediate2Location.coordinates),
-      ...createArc(intermediate2Location.coordinates, destinationLocation.coordinates)
-    ];
+    // Helper function to create a promise that resolves when path animation is complete
+    const createAnimationPromise = (mapRef, path, pathId, intermediateCoords, markerCallback) => {
+      return new Promise((resolve) => {
+        animatePath(mapRef, path, pathId, intermediateCoords, markerCallback);
 
-    animatePath(mapRef, path2, "path2", intermediate2Location.coordinates, () => {
-      addMarkerWithLabel(mapRef, intermediate2Location.coordinates, intermediate2Location.name, 'intermediate2', true);
-    });
+        const checkCompletion = () => {
+          const source = mapRef.getSource(pathId);
+          if (source && source._data.geometry.coordinates.length === path.length) {
+            markerCallback();
+            resolve();
+          } else {
+            setTimeout(checkCompletion, 100);
+          }
+        };
+        checkCompletion();
+      });
+    };
+
+    // 2. Handle TFT paths
+    if (TFT !== null && TFT === true && !TF && TF !== null && FT !== null && !FT) {
+      const pathTFT1 = [
+        ...createArc(sourceLocation.coordinates, intermediate1Location.coordinates),
+        ...createArc(intermediate1Location.coordinates, intermediateD1Location.coordinates),
+        ...createArc(intermediateD1Location.coordinates, destinationLocation.coordinates)
+      ];
+
+      const pathTFT2 = [
+        ...createArc(sourceLocation.coordinates, intermediate2Location.coordinates),
+        ...createArc(intermediate2Location.coordinates, intermediateD2Location.coordinates),
+        ...createArc(intermediateD2Location.coordinates, destinationLocation.coordinates)
+      ];
+
+      // Add sources and layers for TFT paths
+      ['pathTFT1', 'pathTFT2'].forEach((pathId) => {
+        mapRef.addSource(pathId, {
+          type: "geojson",
+          data: {
+            type: "Feature",
+            geometry: {
+              type: "LineString",
+              coordinates: [],
+            },
+          },
+        });
+
+        mapRef.addLayer({
+          id: pathId,
+          type: "line",
+          source: pathId,
+          layout: {
+            "line-join": "round",
+            "line-cap": "round",
+          },
+          paint: {
+            "line-color": "#833AB4",
+            "line-width": 3,
+            "line-opacity": 1,
+          },
+        });
+      });
+
+      // Animate TFT paths sequentially
+      await createAnimationPromise(
+        mapRef,
+        pathTFT1,
+        "pathTFT1",
+        intermediate1Location.coordinates,
+        () => {
+          addMarkerWithLabel(mapRef, intermediate1Location.coordinates, intermediate1Location.name, 'intermediate1', true);
+          addMarkerWithLabel(mapRef, intermediateD1Location.coordinates, intermediateD1Location.name, 'intermediateD1', true);
+        }
+      );
+
+      await createAnimationPromise(
+        mapRef,
+        pathTFT2,
+        "pathTFT2",
+        intermediate2Location.coordinates,
+        () => {
+          addMarkerWithLabel(mapRef, intermediate2Location.coordinates, intermediate2Location.name, 'intermediate2', true);
+          addMarkerWithLabel(mapRef, intermediateD2Location.coordinates, intermediateD2Location.name, 'intermediateD2', true);
+        }
+      );
+    }
+
+    // 3. Handle TF and FT paths
+    if (TF || FT) {
+      if (TF && FT) {
+        // Create all paths
+        const pathTF1 = [
+          ...createArc(sourceLocation.coordinates, intermediate1Location.coordinates),
+          ...createArc(intermediate1Location.coordinates, destinationLocation.coordinates)
+        ];
+        const pathTF2 = [
+          ...createArc(sourceLocation.coordinates, intermediate2Location.coordinates),
+          ...createArc(intermediate2Location.coordinates, destinationLocation.coordinates)
+        ];
+        const pathFT1 = [
+          ...createArc(sourceLocation.coordinates, intermediateD1Location.coordinates),
+          ...createArc(intermediateD1Location.coordinates, destinationLocation.coordinates)
+        ];
+        const pathFT2 = [
+          ...createArc(sourceLocation.coordinates, intermediateD2Location.coordinates),
+          ...createArc(intermediateD2Location.coordinates, destinationLocation.coordinates)
+        ];
+
+        // Add sources and layers for all paths
+        ['pathTF1', 'pathTF2', 'pathFT1', 'pathFT2'].forEach(pathId => {
+          mapRef.addSource(pathId, {
+            type: "geojson",
+            data: {
+              type: "Feature",
+              geometry: {
+                type: "LineString",
+                coordinates: [],
+              },
+            },
+          });
+
+          mapRef.addLayer({
+            id: pathId,
+            type: "line",
+            source: pathId,
+            layout: {
+              "line-join": "round",
+              "line-cap": "round",
+            },
+            paint: {
+              "line-color": pathId.startsWith('pathTF') ? "#0047f4" : "#EF00D2",
+              "line-width": 3,
+              "line-opacity": 1,
+            },
+          });
+        });
+
+        // Animate paths sequentially with completion check
+        await createAnimationPromise(
+          mapRef,
+          pathTF1,
+          "pathTF1",
+          intermediate1Location.coordinates,
+          () => {
+            addMarkerWithLabel(mapRef, intermediate1Location.coordinates, intermediate1Location.name, 'intermediate1', true);
+          }
+        );
+
+        await createAnimationPromise(
+          mapRef,
+          pathTF2,
+          "pathTF2",
+          intermediate2Location.coordinates,
+          () => {
+            addMarkerWithLabel(mapRef, intermediate2Location.coordinates, intermediate2Location.name, 'intermediate2', true);
+          }
+        );
+
+        await createAnimationPromise(
+          mapRef,
+          pathFT1,
+          "pathFT1",
+          intermediateD1Location.coordinates,
+          () => {
+            addMarkerWithLabel(mapRef, intermediateD1Location.coordinates, intermediateD1Location.name, 'intermediateD1', true);
+          }
+        );
+
+        await createAnimationPromise(
+          mapRef,
+          pathFT2,
+          "pathFT2",
+          intermediateD2Location.coordinates,
+          () => {
+            addMarkerWithLabel(mapRef, intermediateD2Location.coordinates, intermediateD2Location.name, 'intermediateD2', true);
+          }
+        );
+
+      } else if (TF) {
+        // Handle TF only paths
+        const pathTF1 = [
+          ...createArc(sourceLocation.coordinates, intermediate1Location.coordinates),
+          ...createArc(intermediate1Location.coordinates, destinationLocation.coordinates)
+        ];
+        const pathTF2 = [
+          ...createArc(sourceLocation.coordinates, intermediate2Location.coordinates),
+          ...createArc(intermediate2Location.coordinates, destinationLocation.coordinates)
+        ];
+
+        ['pathTF1', 'pathTF2'].forEach(pathId => {
+          mapRef.addSource(pathId, {
+            type: "geojson",
+            data: {
+              type: "Feature",
+              geometry: {
+                type: "LineString",
+                coordinates: [],
+              },
+            },
+          });
+
+          mapRef.addLayer({
+            id: pathId,
+            type: "line",
+            source: pathId,
+            layout: {
+              "line-join": "round",
+              "line-cap": "round",
+            },
+            paint: {
+              "line-color": "#0047f4",
+              "line-width": 3,
+              "line-opacity": 1,
+            },
+          });
+        });
+
+        await createAnimationPromise(
+          mapRef,
+          pathTF1,
+          "pathTF1",
+          intermediate1Location.coordinates,
+          () => {
+            addMarkerWithLabel(mapRef, intermediate1Location.coordinates, intermediate1Location.name, 'intermediate1', true);
+          }
+        );
+
+        await createAnimationPromise(
+          mapRef,
+          pathTF2,
+          "pathTF2",
+          intermediate2Location.coordinates,
+          () => {
+            addMarkerWithLabel(mapRef, intermediate2Location.coordinates, intermediate2Location.name, 'intermediate2', true);
+          }
+        );
+
+      } else if (FT) {
+        // Handle FT only paths
+        const pathFT1 = [
+          ...createArc(sourceLocation.coordinates, intermediateD1Location.coordinates),
+          ...createArc(intermediateD1Location.coordinates, destinationLocation.coordinates)
+        ];
+        const pathFT2 = [
+          ...createArc(sourceLocation.coordinates, intermediateD2Location.coordinates),
+          ...createArc(intermediateD2Location.coordinates, destinationLocation.coordinates)
+        ];
+
+        ['pathFT1', 'pathFT2'].forEach(pathId => {
+          mapRef.addSource(pathId, {
+            type: "geojson",
+            data: {
+              type: "Feature",
+              geometry: {
+                type: "LineString",
+                coordinates: [],
+              },
+            },
+          });
+
+          mapRef.addLayer({
+            id: pathId,
+            type: "line",
+            source: pathId,
+            layout: {
+              "line-join": "round",
+              "line-cap": "round",
+            },
+            paint: {
+              "line-color": "#EF00D2",
+              "line-width": 3,
+              "line-opacity": 1,
+            },
+          });
+        });
+
+        await createAnimationPromise(
+          mapRef,
+          pathFT1,
+          "pathFT1",
+          intermediateD1Location.coordinates,
+          () => {
+            addMarkerWithLabel(mapRef, intermediateD1Location.coordinates, intermediateD1Location.name, 'intermediateD1', true);
+          }
+        );
+
+        await createAnimationPromise(
+          mapRef,
+          pathFT2,
+          "pathFT2",
+          intermediateD2Location.coordinates,
+          () => {
+            addMarkerWithLabel(mapRef, intermediateD2Location.coordinates, intermediateD2Location.name, 'intermediateD2', true);
+          }
+        );
+      }
+    }
   };
 
   useEffect(() => {
-
-
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
       style: Styler,
