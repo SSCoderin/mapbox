@@ -3,12 +3,12 @@ import mapboxgl from 'mapbox-gl';
 import * as turf from '@turf/turf';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '../App.css';
-import indiaGeoJSON from './Indian_States.json';
-import indiaGeoJSON1 from './india.geojson';
-import indiaGeoJSON3 from './india-states.geojson';
+// import indiaGeoJSON from './Indian_States.json';
+// import indiaGeoJSON1 from './india.geojson';
+// import indiaGeoJSON3 from './india-states.geojson';
 import Plane from "./plane1.png"
 import Train from "./train.png"
-// import Styler from "../streets/style.json"
+import Styler from "../street/style.json"
 
 
 import axios from 'axios';
@@ -54,42 +54,42 @@ export default function Map() {
     if (!coordinates) {
       const map = new mapboxgl.Map({
         container: mapContainerRef.current,
-        style: "mapbox://styles/wayport-wayport/cm2kj74cj009e01qs4wo52tcn",
+        style: Styler,
         center: [78.9629, 20.5937], // Centered on India
-        zoom: 3,
+        zoom: 4.9,
         pitch: 0,
         bearing: 0,
         dragRotate: false, // Disable rotation
         interactive: true // Keep other interactions like zooming/panning
       });
 
-      map.on('load', () => {
-        map.addSource('india', {
-          type: 'geojson',
-          data: indiaGeoJSON1,
-        });
+      // map.on('load', () => {
+      //   map.addSource('india', {
+      //     type: 'geojson',
+      //     data: indiaGeoJSON1,
+      //   });
 
-        // Add fill layer for states
-        // map.addLayer({
-        //   id: 'state-fill',
-        //   source: 'india',
-        //   type: 'fill',
-        //   paint: {
-        //     'fill-color': '#000000', // Light black for state fill
-        //     'fill-opacity': 0.7,
-        //   },
-        // });
+      //   // Add fill layer for states
+      //   // map.addLayer({
+      //   //   id: 'state-fill',
+      //   //   source: 'india',
+      //   //   type: 'fill',
+      //   //   paint: {
+      //   //     'fill-color': '#000000', // Light black for state fill
+      //   //     'fill-opacity': 0.7,
+      //   //   },
+      //   // });
 
-        //hide existing labels
-        map.getStyle().layers.forEach((layer) => {
-          if (layer.type === 'symbol' && layer.layout['text-field']) {
-            map.setLayoutProperty(layer.id, 'visibility', 'none');
-          }
-        });
+      //   //hide existing labels
+      //   map.getStyle().layers.forEach((layer) => {
+      //     if (layer.type === 'symbol' && layer.layout['text-field']) {
+      //       map.setLayoutProperty(layer.id, 'visibility', 'none');
+      //     }
+      //   });
 
 
-        setMap(map);
-      });
+      //   setMap(map);
+      // });
 
       return () => map.remove();
 
@@ -293,74 +293,74 @@ export default function Map() {
     //       }
     //     });
 
-    //     //plane animation 
-    //     // map.loadImage(Plane, (error, image) => {
-    //     //   if (error) throw error;
-    //     //   map.addImage('plane', image);
+    //     // plane animation 
+    //     map.loadImage(Plane, (error, image) => {
+    //       if (error) throw error;
+    //       map.addImage('plane', image);
 
-    //     //   // Add a source for the animated point
-    //     //   map.addSource('plane-point', {
-    //     //     'type': 'geojson',
-    //     //     'data': {
-    //     //       'type': 'FeatureCollection',
-    //     //       'features': [
-    //     //         {
-    //     //           'type': 'Feature',
-    //     //           'geometry': {
-    //     //             'type': 'Point',
-    //     //             'coordinates': origin // Start at the origin
-    //     //           }
-    //     //         }
-    //     //       ]
-    //     //     }
-    //     //   });
+    //       // Add a source for the animated point
+    //       map.addSource('plane-point', {
+    //         'type': 'geojson',
+    //         'data': {
+    //           'type': 'FeatureCollection',
+    //           'features': [
+    //             {
+    //               'type': 'Feature',
+    //               'geometry': {
+    //                 'type': 'Point',
+    //                 'coordinates': origin // Start at the origin
+    //               }
+    //             }
+    //           ]
+    //         }
+    //       });
 
-    //     //   // Add the plane as a symbol layer
-    //     //   map.addLayer({
-    //     //     'id': 'plane-layer',
-    //     //     'source': 'plane-point',
-    //     //     'type': 'symbol',
-    //     //     'layout': {
-    //     //       'icon-image': 'plane',
-    //     //       'icon-size': 0.5,
-    //     //       'icon-rotate': ['get', 'bearing'], // Optionally rotate based on bearing
-    //     //       'icon-rotation-alignment': 'map'
-    //     //     }
-    //     //   });
+    //       // Add the plane as a symbol layer
+    //       map.addLayer({
+    //         'id': 'plane-layer',
+    //         'source': 'plane-point',
+    //         'type': 'symbol',
+    //         'layout': {
+    //           'icon-image': 'plane',
+    //           'icon-size': 0.5,
+    //           'icon-rotate': ['get', 'bearing'], // Optionally rotate based on bearing
+    //           'icon-rotation-alignment': 'map'
+    //         }
+    //       });
 
-    //     //   // Animation logic
-    //     //   let progress = 0;
-    //     //   const animationSpeed = 0.005; // Adjust speed for the animation
+    //       // Animation logic
+    //       let progress = 0;
+    //       const animationSpeed = 0.005; // Adjust speed for the animation
 
-    //     //   function animatePlane() {
-    //     //     progress += animationSpeed;
-    //     //     if (progress > 1) progress = 1;
+    //       function animatePlane() {
+    //         progress += animationSpeed;
+    //         if (progress > 1) progress = 1;
 
-    //     //     // Calculate the current position along the line
-    //     //     const currentPosition = turf.along(route.features[0], progress * turf.length(route.features[0]));
+    //         // Calculate the current position along the line
+    //         const currentPosition = turf.along(route.features[0], progress * turf.length(route.features[0]));
 
-    //     //     // Update the plane position
-    //     //     map.getSource('plane-point').setData({
-    //     //       'type': 'FeatureCollection',
-    //     //       'features': [
-    //     //         {
-    //     //           'type': 'Feature',
-    //     //           'geometry': {
-    //     //             'type': 'Point',
-    //     //             'coordinates': currentPosition.geometry.coordinates
-    //     //           }
-    //     //         }
-    //     //       ]
-    //     //     });
+    //         // Update the plane position
+    //         map.getSource('plane-point').setData({
+    //           'type': 'FeatureCollection',
+    //           'features': [
+    //             {
+    //               'type': 'Feature',
+    //               'geometry': {
+    //                 'type': 'Point',
+    //                 'coordinates': currentPosition.geometry.coordinates
+    //               }
+    //             }
+    //           ]
+    //         });
 
-    //     //     if (progress < 1) {
-    //     //       requestAnimationFrame(animatePlane);
-    //     //     }
-    //     //   }
+    //         if (progress < 1) {
+    //           requestAnimationFrame(animatePlane);
+    //         }
+    //       }
 
-    //     //   // Start the animation
-    //     //   animatePlane();
-    //     // });
+    //       // Start the animation
+    //       animatePlane();
+    //     });
 
     //     setMap(map);
     //   });
@@ -1815,541 +1815,553 @@ export default function Map() {
     //   });
     // }
 
-    if (mode === "ALL") {
-      const routeF = {
-        'type': 'FeatureCollection',
-        'features': [
-          {
-            'type': 'Feature',
-            'geometry': {
-              'type': 'LineString',
-              'coordinates': [origin, destination]
-            }
-          }
-        ]
-      };
+    // if (mode === "ALL") {
+    //   const routeF = {
+    //     'type': 'FeatureCollection',
+    //     'features': [
+    //       {
+    //         'type': 'Feature',
+    //         'geometry': {
+    //           'type': 'LineString',
+    //           'coordinates': [origin, destination]
+    //         }
+    //       }
+    //     ]
+    //   };
 
-      const routeTF1 = {
-        'type': 'FeatureCollection',
-        'features': [
-          {
-            'type': 'Feature',
-            'geometry': {
-              'type': 'LineString',
-              'coordinates': [origin, intermediate1Teir1]
-            }
-          }
-        ]
-      };
+    //   const routeTF1 = {
+    //     'type': 'FeatureCollection',
+    //     'features': [
+    //       {
+    //         'type': 'Feature',
+    //         'geometry': {
+    //           'type': 'LineString',
+    //           'coordinates': [origin, intermediate1Teir1]
+    //         }
+    //       }
+    //     ]
+    //   };
 
-      const routeTF2 = {
-        'type': 'FeatureCollection',
-        'features': [
-          {
-            'type': 'Feature',
-            'geometry': {
-              'type': 'LineString',
-              'coordinates': [intermediate1Teir1, destination]
-            }
-          }
-        ]
-      };
+    //   const routeTF2 = {
+    //     'type': 'FeatureCollection',
+    //     'features': [
+    //       {
+    //         'type': 'Feature',
+    //         'geometry': {
+    //           'type': 'LineString',
+    //           'coordinates': [intermediate1Teir1, destination]
+    //         }
+    //       }
+    //     ]
+    //   };
 
-      const routeFT1 = {
-        'type': 'FeatureCollection',
-        'features': [
-          {
-            'type': 'Feature',
-            'geometry': {
-              'type': 'LineString',
-              'coordinates': [origin, intermediate2Teir1]
-            }
-          }
-        ]
-      };
+    //   const routeFT1 = {
+    //     'type': 'FeatureCollection',
+    //     'features': [
+    //       {
+    //         'type': 'Feature',
+    //         'geometry': {
+    //           'type': 'LineString',
+    //           'coordinates': [origin, intermediate2Teir1]
+    //         }
+    //       }
+    //     ]
+    //   };
 
-      const routeFT2 = {
-        'type': 'FeatureCollection',
-        'features': [
-          {
-            'type': 'Feature',
-            'geometry': {
-              'type': 'LineString',
-              'coordinates': [intermediate2Teir1, destination]
-            }
-          }
-        ]
-      };
+    //   const routeFT2 = {
+    //     'type': 'FeatureCollection',
+    //     'features': [
+    //       {
+    //         'type': 'Feature',
+    //         'geometry': {
+    //           'type': 'LineString',
+    //           'coordinates': [intermediate2Teir1, destination]
+    //         }
+    //       }
+    //     ]
+    //   };
 
-      const routeTFT1 = {
-        'type': 'FeatureCollection',
-        'features': [
-          {
-            'type': 'Feature',
-            'geometry': {
-              'type': 'LineString',
-              'coordinates': [origin, intermediate1Teir2]
-            }
-          }
-        ]
-      };
+    //   const routeTFT1 = {
+    //     'type': 'FeatureCollection',
+    //     'features': [
+    //       {
+    //         'type': 'Feature',
+    //         'geometry': {
+    //           'type': 'LineString',
+    //           'coordinates': [origin, intermediate1Teir2]
+    //         }
+    //       }
+    //     ]
+    //   };
 
-      const routeTFT2 = {
-        'type': 'FeatureCollection',
-        'features': [
-          {
-            'type': 'Feature',
-            'geometry': {
-              'type': 'LineString',
-              'coordinates': [intermediate1Teir2, intermediate2Teir2]
-            }
-          }
-        ]
-      };
+    //   const routeTFT2 = {
+    //     'type': 'FeatureCollection',
+    //     'features': [
+    //       {
+    //         'type': 'Feature',
+    //         'geometry': {
+    //           'type': 'LineString',
+    //           'coordinates': [intermediate1Teir2, intermediate2Teir2]
+    //         }
+    //       }
+    //     ]
+    //   };
 
-      const routeTFT3 = {
-        'type': 'FeatureCollection',
-        'features': [
-          {
-            'type': 'Feature',
-            'geometry': {
-              'type': 'LineString',
-              'coordinates': [intermediate2Teir2, destination]
-            }
-          }
-        ]
-      };
+    //   const routeTFT3 = {
+    //     'type': 'FeatureCollection',
+    //     'features': [
+    //       {
+    //         'type': 'Feature',
+    //         'geometry': {
+    //           'type': 'LineString',
+    //           'coordinates': [intermediate2Teir2, destination]
+    //         }
+    //       }
+    //     ]
+    //   };
 
-      map.on("load", () => {
-        map.addSource('india', {
-          type: 'geojson',
-          data: indiaGeoJSON1,
-        });
+    //   map.on("load", () => {
+    //     map.addSource('india', {
+    //       type: 'geojson',
+    //       data: indiaGeoJSON1,
+    //     });
 
-        map.addSource('routeF', {
-          'type': 'geojson',
-          'data': routeF
-        });
+    //     map.addSource('origin', {
+    //       'type': 'geojson',
+    //       'data': {
+    //         'type': 'FeatureCollection',
+    //         'features': [
+    //           {
+    //             'type': 'Feature',
+    //             'geometry': {
+    //               'type': 'Point',
+    //               'coordinates': origin
+    //             },
+    //             'properties': {
+    //               'title': coordinates.sourceCity.city_name // Label for the source
+    //             }
+    //           }
+    //         ]
+    //       }
+    //     });
 
-        map.addSource('routeTF1', {
-          'type': 'geojson',
-          'data': routeTF1
-        });
+    //     map.addLayer({
+    //       'id': 'origin',
+    //       'source': 'origin',
+    //       'type': 'circle',
+    //       'paint': {
+    //         'circle-radius': 10,
+    //         'circle-color': '#ff0000', // Green color for glowing point
+    //         'circle-blur': 0.5, // Blur effect to make it glow
+    //         'circle-opacity': 1 // Slight transparency for glowing effect
+    //       }
+    //     });
 
-        map.addSource('routeTF2', {
-          'type': 'geojson',
-          'data': routeTF2
-        });
+    //     map.addLayer({
+    //       id: 'origin-label',
+    //       source: 'origin',
+    //       type: 'symbol',
+    //       layout: {
+    //         'text-field': ['get', 'title'],
+    //         'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+    //         'text-size': 12,
+    //         'text-offset': [0, 1.5],
+    //       },
+    //       paint: {
+    //         'text-color': '#ffffff',
+    //         'text-halo-color': '#000000',
+    //         'text-halo-width': 1,
+    //       },
+    //     });
 
-        map.addSource('routeFT1', {
-          'type': 'geojson',
-          'data': routeFT1
-        });
+    //     setTimeout(() => {
+    //       map.addSource('destination', {
+    //         'type': 'geojson',
+    //         'data': {
+    //           'type': 'FeatureCollection',
+    //           'features': [
+    //             {
+    //               'type': 'Feature',
+    //               'geometry': {
+    //                 'type': 'Point',
+    //                 'coordinates': destination
+    //               },
+    //               'properties': {
+    //                 'title': coordinates.destinationCity.city_name // Label for the source
+    //               }
+    //             }
+    //           ]
+    //         }
+    //       });
+  
+    //       map.addLayer({
+    //         'id': 'destination',
+    //         'source': 'destination',
+    //         'type': 'circle',
+    //         'paint': {
+    //           'circle-radius': 10,
+    //           'circle-color': '#ff0000', // Color for glowing destination point
+    //           'circle-blur': 0.5, // Blur effect to make it glow
+    //           'circle-opacity': 1 // Slight transparency for glowing effect
+    //         }
+    //       });
+  
+    //       map.addLayer({
+    //         'id': 'destination-label',
+    //         'source': 'destination',
+    //         'type': 'symbol',
+    //         'layout': {
+    //           'text-field': ['get', 'title'],
+    //           'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+    //           'text-size': 12,
+    //           'text-offset': [0, 1.5]
+    //         },
+    //         'paint': {
+    //           'text-color': '#ffffff', // White color to contrast with the dark map
+    //           'text-halo-color': '#000000',
+    //           'text-halo-width': 1
+    //         }
+    //       });
+    //     }, 1000);
 
-        map.addSource('routeFT2', {
-          'type': 'geojson',
-          'data': routeFT2
-        });
+    //     map.addSource('routeF', {
+    //       'type': 'geojson',
+    //       'data': routeF
+    //     });
 
-        map.addSource('routeTFT1', {
-          'type': 'geojson',
-          'data': routeTFT1
-        });
+    //     map.addSource('routeTF1', {
+    //       'type': 'geojson',
+    //       'data': routeTF1
+    //     });
 
-        map.addSource('routeTFT2', {
-          'type': 'geojson',
-          'data': routeTFT2
-        });
+    //     map.addSource('routeTF2', {
+    //       'type': 'geojson',
+    //       'data': routeTF2
+    //     });
 
-        map.addSource('routeTFT3', {
-          'type': 'geojson',
-          'data': routeTFT3
-        });
+    //     map.addSource('routeFT1', {
+    //       'type': 'geojson',
+    //       'data': routeFT1
+    //     });
 
-        map.addSource('origin', {
-          'type': 'geojson',
-          'data': {
-            'type': 'FeatureCollection',
-            'features': [
-              {
-                'type': 'Feature',
-                'geometry': {
-                  'type': 'Point',
-                  'coordinates': origin
-                },
-                'properties': {
-                  'title': coordinates.sourceCity.city_name // Label for the source
-                }
-              }
-            ]
-          }
-        });
+    //     map.addSource('routeFT2', {
+    //       'type': 'geojson',
+    //       'data': routeFT2
+    //     });
 
-        map.addSource('destination', {
-          'type': 'geojson',
-          'data': {
-            'type': 'FeatureCollection',
-            'features': [
-              {
-                'type': 'Feature',
-                'geometry': {
-                  'type': 'Point',
-                  'coordinates': destination
-                },
-                'properties': {
-                  'title': coordinates.destinationCity.city_name // Label for the source
-                }
-              }
-            ]
-          }
-        });
+    //     map.addSource('routeTFT1', {
+    //       'type': 'geojson',
+    //       'data': routeTFT1
+    //     });
 
-        map.addSource('intermediate1Teir1', {
-          'type': 'geojson',
-          'data': {
-            'type': 'FeatureCollection',
-            'features': [
-              {
-                'type': 'Feature',
-                'geometry': {
-                  'type': 'Point',
-                  'coordinates': intermediate1Teir1
-                },
-                'properties': {
-                  'title': coordinates.TFTnearestStations.src_nearest_a1.city_name // Label for the source
-                }
-              }
-            ]
-          }
-        });
+    //     map.addSource('routeTFT2', {
+    //       'type': 'geojson',
+    //       'data': routeTFT2
+    //     });
 
-        map.addSource('intermediate1Teir2', {
-          'type': 'geojson',
-          'data': {
-            'type': 'FeatureCollection',
-            'features': [
-              {
-                'type': 'Feature',
-                'geometry': {
-                  'type': 'Point',
-                  'coordinates': intermediate1Teir2
-                },
-                'properties': {
-                  'title': coordinates.TFTnearestStations.src_nearest_a3.city_name // Label for the source
-                }
-              }
-            ]
-          }
-        });
+    //     map.addSource('routeTFT3', {
+    //       'type': 'geojson',
+    //       'data': routeTFT3
+    //     });
 
-        map.addSource('intermediate2Teir1', {
-          'type': 'geojson',
-          'data': {
-            'type': 'FeatureCollection',
-            'features': [
-              {
-                'type': 'Feature',
-                'geometry': {
-                  'type': 'Point',
-                  'coordinates': intermediate2Teir1
-                },
-                'properties': {
-                  'title': coordinates.TFTnearestStations.dest_nearest_a1.city_name // Label for the source
-                }
-              }
-            ]
-          }
-        });
-
-        map.addSource('intermediate2Teir2', {
-          'type': 'geojson',
-          'data': {
-            'type': 'FeatureCollection',
-            'features': [
-              {
-                'type': 'Feature',
-                'geometry': {
-                  'type': 'Point',
-                  'coordinates': intermediate2Teir2
-                },
-                'properties': {
-                  'title': coordinates.TFTnearestStations.dest_nearest_a3.city_name // Label for the source
-                }
-              }
-            ]
-          }
-        });
-
-        map.addLayer({
-          'id': 'routeF',
-          'source': 'routeF',
-          'type': 'line',
-          'paint': {
-            'line-width': 2,
-            'line-color': '#4682B4'
-          }
-        });
-
-        map.addLayer({
-          'id': 'routeTF1',
-          'source': 'routeTF1',
-          'type': 'line',
-          'paint': {
-            'line-width': 2,
-            'line-color': '#90ee90'
-          }
-        });
-
-        map.addLayer({
-          'id': 'routeTF2',
-          'source': 'routeTF2',
-          'type': 'line',
-          'paint': {
-            'line-width': 2,
-            'line-color': '#90ee90'
-          }
-        });
-
-        map.addLayer({
-          'id': 'routeFT1',
-          'source': 'routeFT1',
-          'type': 'line',
-          'paint': {
-            'line-width': 2,
-            'line-color': '#00FFFF'
-          }
-        });
-
-        map.addLayer({
-          'id': 'routeFT2',
-          'source': 'routeFT2',
-          'type': 'line',
-          'paint': {
-            'line-width': 2,
-            'line-color': '#00FFFF'
-          }
-        });
-
-        map.addLayer({
-          'id': 'routeTFT1',
-          'source': 'routeTFT1',
-          'type': 'line',
-          'paint': {
-            'line-width': 2,
-            'line-color': '#E1D9D1'
-          }
-        });
-
-        map.addLayer({
-          'id': 'routeTFT2',
-          'source': 'routeTFT2',
-          'type': 'line',
-          'paint': {
-            'line-width': 2,
-            'line-color': '#E1D9D1'
-          }
-        });
-
-        map.addLayer({
-          'id': 'routeTFT3',
-          'source': 'routeTFT3',
-          'type': 'line',
-          'paint': {
-            'line-width': 2,
-            'line-color': '#E1D9D1'
-          }
-        });
         
-        map.addLayer({
-          'id': 'intermediate1Teir1',
-          'source': 'intermediate1Teir1',
-          'type': 'circle',
-          'paint': {
-            'circle-radius': 6,
-            'circle-color': '#007cbf', // Blue color for glowing point
-            'circle-blur': 0.5, // Blur effect to make it glow
-            'circle-opacity': 1 // Slight transparency for glowing effect
-          }
-        });
 
-        map.addLayer({
-          'id': 'intermediate2Teir1',
-          'source': 'intermediate2Teir1',  // Corrected source name
-          'type': 'circle',
-          'paint': {
-            'circle-radius': 6,
-            'circle-color': '#007cbf',
-            'circle-blur': 0.5,
-            'circle-opacity': 1
-          }
-        });
+    //     map.addSource('intermediate1Teir1', {
+    //       'type': 'geojson',
+    //       'data': {
+    //         'type': 'FeatureCollection',
+    //         'features': [
+    //           {
+    //             'type': 'Feature',
+    //             'geometry': {
+    //               'type': 'Point',
+    //               'coordinates': intermediate1Teir1
+    //             },
+    //             'properties': {
+    //               'title': coordinates.TFTnearestStations.src_nearest_a1.city_name // Label for the source
+    //             }
+    //           }
+    //         ]
+    //       }
+    //     });
 
-        map.addLayer({
-          'id': 'intermediate1Teir2',
-          'source': 'intermediate1Teir2',
-          'type': 'circle',
-          'paint': {
-            'circle-radius': 6,
-            'circle-color': '#007cbf', // Blue color for glowing point
-            'circle-blur': 0.5, // Blur effect to make it glow
-            'circle-opacity': 1 // Slight transparency for glowing effect
-          }
-        });
+    //     map.addSource('intermediate1Teir2', {
+    //       'type': 'geojson',
+    //       'data': {
+    //         'type': 'FeatureCollection',
+    //         'features': [
+    //           {
+    //             'type': 'Feature',
+    //             'geometry': {
+    //               'type': 'Point',
+    //               'coordinates': intermediate1Teir2
+    //             },
+    //             'properties': {
+    //               'title': coordinates.TFTnearestStations.src_nearest_a3.city_name // Label for the source
+    //             }
+    //           }
+    //         ]
+    //       }
+    //     });
 
-        map.addLayer({
-          'id': 'intermediate2Teir2',
-          'source': 'intermediate2Teir2',
-          'type': 'circle',
-          'paint': {
-            'circle-radius': 6,
-            'circle-color': '#007cbf', // Blue color for glowing point
-            'circle-blur': 0.5, // Blur effect to make it glow
-            'circle-opacity': 1 // Slight transparency for glowing effect
-          }
-        });
+    //     map.addSource('intermediate2Teir1', {
+    //       'type': 'geojson',
+    //       'data': {
+    //         'type': 'FeatureCollection',
+    //         'features': [
+    //           {
+    //             'type': 'Feature',
+    //             'geometry': {
+    //               'type': 'Point',
+    //               'coordinates': intermediate2Teir1
+    //             },
+    //             'properties': {
+    //               'title': coordinates.TFTnearestStations.dest_nearest_a1.city_name // Label for the source
+    //             }
+    //           }
+    //         ]
+    //       }
+    //     });
 
-        map.addLayer({
-          'id': 'origin',
-          'source': 'origin',
-          'type': 'circle',
-          'paint': {
-            'circle-radius': 10,
-            'circle-color': '#ff0000', // Green color for glowing point
-            'circle-blur': 0.5, // Blur effect to make it glow
-            'circle-opacity': 1 // Slight transparency for glowing effect
-          }
-        });
+    //     map.addSource('intermediate2Teir2', {
+    //       'type': 'geojson',
+    //       'data': {
+    //         'type': 'FeatureCollection',
+    //         'features': [
+    //           {
+    //             'type': 'Feature',
+    //             'geometry': {
+    //               'type': 'Point',
+    //               'coordinates': intermediate2Teir2
+    //             },
+    //             'properties': {
+    //               'title': coordinates.TFTnearestStations.dest_nearest_a3.city_name // Label for the source
+    //             }
+    //           }
+    //         ]
+    //       }
+    //     });
 
-        map.addLayer({
-          'id': 'destination',
-          'source': 'destination',
-          'type': 'circle',
-          'paint': {
-            'circle-radius': 10,
-            'circle-color': '#ff0000', // Color for glowing destination point
-            'circle-blur': 0.5, // Blur effect to make it glow
-            'circle-opacity': 1 // Slight transparency for glowing effect
-          }
-        });
+    //     map.addLayer({
+    //       'id': 'routeF',
+    //       'source': 'routeF',
+    //       'type': 'line',
+    //       'paint': {
+    //         'line-width': 2,
+    //         'line-color': '#4682B4'
+    //       }
+    //     });
 
-        map.getStyle().layers.forEach((layer) => {
-          if (layer.type === 'symbol' && layer.layout['text-field']) {
-            map.setLayoutProperty(layer.id, 'visibility', 'none');
-          }
-        });
+    //     map.addLayer({
+    //       'id': 'routeTF1',
+    //       'source': 'routeTF1',
+    //       'type': 'line',
+    //       'paint': {
+    //         'line-width': 2,
+    //         'line-color': '#90ee90'
+    //       }
+    //     });
 
-        // Add source label
-        map.addLayer({
-          id: 'origin-label',
-          source: 'origin',
-          type: 'symbol',
-          layout: {
-            'text-field': ['get', 'title'],
-            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-            'text-size': 12,
-            'text-offset': [0, 1.5],
-          },
-          paint: {
-            'text-color': '#ffffff',
-            'text-halo-color': '#000000',
-            'text-halo-width': 1,
-          },
-        });
+    //     map.addLayer({
+    //       'id': 'routeTF2',
+    //       'source': 'routeTF2',
+    //       'type': 'line',
+    //       'paint': {
+    //         'line-width': 2,
+    //         'line-color': '#90ee90'
+    //       }
+    //     });
 
-        // Add intermediate1Teir1 label
-        map.addLayer({
-          'id': 'intermediate1Teir1-label',
-          'source': 'intermediate1Teir1',
-          'type': 'symbol',
-          'layout': {
-            'text-field': ['get', 'title'],
-            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-            'text-size': 8,
-            'text-offset': [0, 1.5]
-          },
-          'paint': {
-            'text-color': '#ffffff', // White color to contrast with the dark map
-            'text-halo-color': '#000000',
-            'text-halo-width': 1
-          }
-        });
+    //     map.addLayer({
+    //       'id': 'routeFT1',
+    //       'source': 'routeFT1',
+    //       'type': 'line',
+    //       'paint': {
+    //         'line-width': 2,
+    //         'line-color': '#00FFFF'
+    //       }
+    //     });
 
-        // Add intermediate2Teir1 label
-        map.addLayer({
-          'id': 'intermediate2Teir1-label',
-          'source': 'intermediate2Teir1',
-          'type': 'symbol',
-          'layout': {
-            'text-field': ['get', 'title'],
-            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-            'text-size': 8,
-            'text-offset': [0, 1.5]
-          },
-          'paint': {
-            'text-color': '#ffffff', // White color to contrast with the dark map
-            'text-halo-color': '#000000',
-            'text-halo-width': 1
-          }
-        });
+    //     map.addLayer({
+    //       'id': 'routeFT2',
+    //       'source': 'routeFT2',
+    //       'type': 'line',
+    //       'paint': {
+    //         'line-width': 2,
+    //         'line-color': '#00FFFF'
+    //       }
+    //     });
 
-        // Add intermediate1Teir2 label
-        map.addLayer({
-          'id': 'intermediate1Teir2-label',
-          'source': 'intermediate1Teir2',
-          'type': 'symbol',
-          'layout': {
-            'text-field': ['get', 'title'],
-            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-            'text-size': 8,
-            'text-offset': [0, 1.5]
-          },
-          'paint': {
-            'text-color': '#ffffff', // White color to contrast with the dark map
-            'text-halo-color': '#000000',
-            'text-halo-width': 1
-          }
-        });
+    //     map.addLayer({
+    //       'id': 'routeTFT1',
+    //       'source': 'routeTFT1',
+    //       'type': 'line',
+    //       'paint': {
+    //         'line-width': 2,
+    //         'line-color': '#E1D9D1'
+    //       }
+    //     });
 
-        // Add intermediate2Teir2 label
-        map.addLayer({
-          'id': 'intermediate2Teir2-label',
-          'source': 'intermediate2Teir2',
-          'type': 'symbol',
-          'layout': {
-            'text-field': ['get', 'title'],
-            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-            'text-size': 8,
-            'text-offset': [0, 1.5]
-          },
-          'paint': {
-            'text-color': '#ffffff', // White color to contrast with the dark map
-            'text-halo-color': '#000000',
-            'text-halo-width': 1
-          }
-        });
+    //     map.addLayer({
+    //       'id': 'routeTFT2',
+    //       'source': 'routeTFT2',
+    //       'type': 'line',
+    //       'paint': {
+    //         'line-width': 2,
+    //         'line-color': '#E1D9D1'
+    //       }
+    //     });
 
-        // Add destination label
-        map.addLayer({
-          'id': 'destination-label',
-          'source': 'destination',
-          'type': 'symbol',
-          'layout': {
-            'text-field': ['get', 'title'],
-            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-            'text-size': 12,
-            'text-offset': [0, 1.5]
-          },
-          'paint': {
-            'text-color': '#ffffff', // White color to contrast with the dark map
-            'text-halo-color': '#000000',
-            'text-halo-width': 1
-          }
-        });
+    //     map.addLayer({
+    //       'id': 'routeTFT3',
+    //       'source': 'routeTFT3',
+    //       'type': 'line',
+    //       'paint': {
+    //         'line-width': 2,
+    //         'line-color': '#E1D9D1'
+    //       }
+    //     });
+
+    //     map.addLayer({
+    //       'id': 'intermediate1Teir1',
+    //       'source': 'intermediate1Teir1',
+    //       'type': 'circle',
+    //       'paint': {
+    //         'circle-radius': 6,
+    //         'circle-color': '#007cbf', // Blue color for glowing point
+    //         'circle-blur': 0.5, // Blur effect to make it glow
+    //         'circle-opacity': 1 // Slight transparency for glowing effect
+    //       }
+    //     });
+
+    //     map.addLayer({
+    //       'id': 'intermediate2Teir1',
+    //       'source': 'intermediate2Teir1',  // Corrected source name
+    //       'type': 'circle',
+    //       'paint': {
+    //         'circle-radius': 6,
+    //         'circle-color': '#007cbf',
+    //         'circle-blur': 0.5,
+    //         'circle-opacity': 1
+    //       }
+    //     });
+
+    //     map.addLayer({
+    //       'id': 'intermediate1Teir2',
+    //       'source': 'intermediate1Teir2',
+    //       'type': 'circle',
+    //       'paint': {
+    //         'circle-radius': 6,
+    //         'circle-color': '#007cbf', // Blue color for glowing point
+    //         'circle-blur': 0.5, // Blur effect to make it glow
+    //         'circle-opacity': 1 // Slight transparency for glowing effect
+    //       }
+    //     });
+
+    //     map.addLayer({
+    //       'id': 'intermediate2Teir2',
+    //       'source': 'intermediate2Teir2',
+    //       'type': 'circle',
+    //       'paint': {
+    //         'circle-radius': 6,
+    //         'circle-color': '#007cbf', // Blue color for glowing point
+    //         'circle-blur': 0.5, // Blur effect to make it glow
+    //         'circle-opacity': 1 // Slight transparency for glowing effect
+    //       }
+    //     });
 
 
-        setMap(map);
-      })
-    }
+
+        
+
+    //     // map.getStyle().layers.forEach((layer) => {
+    //     //   if (layer.type === 'symbol' && layer.layout['text-field']) {
+    //     //     map.setLayoutProperty(layer.id, 'visibility', 'none');
+    //     //   }
+    //     // });
+
+    //     // Add source label
+
+
+    //     // Add intermediate1Teir1 label
+    //     map.addLayer({
+    //       'id': 'intermediate1Teir1-label',
+    //       'source': 'intermediate1Teir1',
+    //       'type': 'symbol',
+    //       'layout': {
+    //         'text-field': ['get', 'title'],
+    //         'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+    //         'text-size': 8,
+    //         'text-offset': [0, 1.5]
+    //       },
+    //       'paint': {
+    //         'text-color': '#ffffff', // White color to contrast with the dark map
+    //         'text-halo-color': '#000000',
+    //         'text-halo-width': 1
+    //       }
+    //     });
+
+    //     // Add intermediate2Teir1 label
+    //     map.addLayer({
+    //       'id': 'intermediate2Teir1-label',
+    //       'source': 'intermediate2Teir1',
+    //       'type': 'symbol',
+    //       'layout': {
+    //         'text-field': ['get', 'title'],
+    //         'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+    //         'text-size': 8,
+    //         'text-offset': [0, 1.5]
+    //       },
+    //       'paint': {
+    //         'text-color': '#ffffff', // White color to contrast with the dark map
+    //         'text-halo-color': '#000000',
+    //         'text-halo-width': 1
+    //       }
+    //     });
+
+    //     // Add intermediate1Teir2 label
+    //     map.addLayer({
+    //       'id': 'intermediate1Teir2-label',
+    //       'source': 'intermediate1Teir2',
+    //       'type': 'symbol',
+    //       'layout': {
+    //         'text-field': ['get', 'title'],
+    //         'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+    //         'text-size': 8,
+    //         'text-offset': [0, 1.5]
+    //       },
+    //       'paint': {
+    //         'text-color': '#ffffff', // White color to contrast with the dark map
+    //         'text-halo-color': '#000000',
+    //         'text-halo-width': 1
+    //       }
+    //     });
+
+    //     // Add intermediate2Teir2 label
+    //     map.addLayer({
+    //       'id': 'intermediate2Teir2-label',
+    //       'source': 'intermediate2Teir2',
+    //       'type': 'symbol',
+    //       'layout': {
+    //         'text-field': ['get', 'title'],
+    //         'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+    //         'text-size': 8,
+    //         'text-offset': [0, 1.5]
+    //       },
+    //       'paint': {
+    //         'text-color': '#ffffff', // White color to contrast with the dark map
+    //         'text-halo-color': '#000000',
+    //         'text-halo-width': 1
+    //       }
+    //     });
+
+    //     // Add destination label
+        
+
+
+    //     setMap(map);
+    //   })
+    // }
 
 
     return () => map.remove();
